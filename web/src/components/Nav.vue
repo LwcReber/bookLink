@@ -3,8 +3,8 @@
     <div flex="cross:center main:justify" class="content">
       <div>
         <span class="home" @click="toPath('/')">首页</span>
-        <el-input @keydown.enter.native="0" class="search-ipt" size="small" placeholder="搜索" clearable v-model="search">
-          <i slot="append" class="icon el-icon-search"></i>
+        <el-input @blur="focus = 'blur'" @focus="focus = 'focus'" prefix-icon="el-icon-search" @keydown.enter.native="searchContent" :class="{'search-ipt': true, 'expand': focus === 'focus', 'clspand': focus === 'blur'}" size="small" placeholder="搜索" clearable v-model="search">
+          <!-- <i slot="append" class="icon el-icon-search"></i> -->
         </el-input>
       </div>
       <div class="right">
@@ -21,7 +21,8 @@ export default {
   components: { 'el-input': Input },
   data () {
     return {
-      search: ''
+      search: '',
+      focus: 'blur' // 搜索input focus状态， focus， blur
     }
   },
   methods: {
@@ -57,10 +58,11 @@ export default {
 }
 .right {
   .login {
-
+    cursor: pointer;
   }
   .write {
     margin-left: 10px;
+    cursor: pointer;
   }
 }
 .search-ipt {
@@ -73,5 +75,19 @@ export default {
       cursor: pointer;
     }
   }
+}
+.expand {
+  animation: move 0.5s forwards;
+}
+.clspand {
+  animation: resetMove 0.5s forwards;
+}
+@keyframes move {
+  from { width: 200px }
+  to { width: 300px }
+}
+@keyframes resetMove {
+  from { width: 300px }
+  to { width: 200px }
 }
 </style>

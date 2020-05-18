@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="main-container">
     <Nav/>
     <div class="main">
       <router-view/>
@@ -16,6 +16,8 @@ export default {
 <style lang="scss" scoped>
   .main {
     padding-top: 50px;
-
+  }
+  .main-container {
+    // padding: 0 10px;
   }
 </style>

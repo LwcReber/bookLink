@@ -1,6 +1,6 @@
 <template>
   <div>
-    write
+    <div></div>
   </div>
 </template>
 

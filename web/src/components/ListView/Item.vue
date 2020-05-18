@@ -1,7 +1,7 @@
 <template>
   <div class="item">
     <slot></slot>
-    <span class="title">发到沙发上</span>
+    <span @click="toDetail" class="title">发到沙发上</span>
     <div class="content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus sed ullam optio culpa voluptate inventore! Eius pariatur nam, minima architecto omnis nostrum voluptatum quo nisi ipsam animi consequatur molestias nulla!</div>
   </div>
 </template>
@@ -12,6 +12,11 @@ export default {
   props: {
     data: {
       type: Object
+    }
+  },
+  methods: {
+    toDetail () {
+      this.$router.push('/detail/aaa')
     }
   }
 }
