@@ -7,8 +7,9 @@
           <!-- <i slot="append" class="icon el-icon-search"></i> -->
         </el-input>
       </div>
-      <div class="right">
-        <span @click="toPath('login')" class="login">登录</span>
+      <div flex="cross:center" class="right">
+        <view-avatar :text="userName" class="user-avatar" v-if="token" quickWidth="40px" borderRadius="50%" src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3238317745,514710292&fm=26&gp=0.jpg"></view-avatar>
+        <span v-else @click="toPath('login')" class="login">登录</span>
         <span @click="toPath('write')" class="write">写文章</span>
       </div>
     </div>
@@ -17,13 +18,22 @@
 
 <script>
 import { Input } from 'element-ui'
+import ViewAvatar from 'view-avatar'
+import { mapState } from 'vuex'
 export default {
-  components: { 'el-input': Input },
+  components: { 'el-input': Input, ViewAvatar },
   data () {
     return {
       search: '',
       focus: 'blur' // 搜索input focus状态， focus， blur
     }
+  },
+  computed: {
+    ...mapState({
+      token: state => state.user.token,
+      avatar: state => state.user.avatar,
+      userName: state => state.user.userName
+    })
   },
   methods: {
     toPath (path) {
@@ -90,4 +100,9 @@ export default {
   from { width: 300px }
   to { width: 200px }
 }
+.user-avatar {
+  width: 40px;
+  height: 40px;
+}
+
 </style>
