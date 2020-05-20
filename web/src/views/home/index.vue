@@ -1,5 +1,5 @@
 <template>
-  <main class="page">
+  <main class="page home">
     <!-- banner -->
     <Carousel height="250px" trigger="click">
       <CarouselItem v-for="item in 4" :key="item">fsadfpdsaf</CarouselItem>
@@ -37,7 +37,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+  .home {
+    padding: 0 10px;
+  }
 </style>
 <style lang="scss">
   .el-carousel__item:nth-child(2n) {

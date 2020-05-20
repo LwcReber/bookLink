@@ -2,6 +2,7 @@
 export default {
   minHeight: '200px',
   previewStyle: 'vertical',
+  language: 'zh-CN',
   useCommandShortcut: true,
   useDefaultHTMLSanitizer: true,
   usageStatistics: false,

@@ -44,7 +44,7 @@ export default {
   left: 0;
   right: 0;
   padding: 0 10px;
-  z-index: 99999999;
+  z-index: 1000;
   background: #fff;
   border-bottom: 1px solid #eee;
   .content {

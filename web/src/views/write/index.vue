@@ -3,7 +3,7 @@
     <div flex="main:justify">
       <el-input class="title" placeholder="请输入标题" v-model="title"></el-input>
       <div class="right" flex="main:right cross:center">
-        <Button type="primary" size="mini" class="publish">发布</Button>
+        <Button @click="publish" type="primary" size="mini" class="publish">发布</Button>
         <Button @click="$router.push('/')" type="primary" size="mini" class="to-home">回到首页</Button>
       </div>
     </div>
@@ -20,6 +20,31 @@ export default {
     return {
       title: '',
       content: ''
+    }
+  },
+  methods: {
+    publish () {
+      if (!this.title.trim()) {
+        this.$message({
+          message: '请输入标题',
+          type: 'error'
+        })
+        return
+      }
+      if (!this.content.trim()) {
+        this.$message({
+          message: '请输入内容',
+          type: 'error'
+        })
+        return
+      }
+      this.$message({
+        message: '发布成功',
+        type: 'success'
+      })
+      setTimeout(() => {
+        this.$router.push('/')
+      }, 1000)
     }
   }
 }
