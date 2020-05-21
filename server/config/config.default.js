@@ -16,8 +16,11 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1589385077204_7555';
 
   // add your middleware config here
-  config.middleware = [];
-
+  config.middleware = ['errorHandler'];
+  // 只对 /api 前缀的 url 路径生效
+  config.errorHandler = {
+    match: '/api'
+  }
   // add your user config here
   const userConfig = {
     // myAppName: 'egg',
@@ -28,7 +31,38 @@ module.exports = appInfo => {
     port: 3306,
     password: "12345678",
     username: "root",
-    database: 'egg_sequelize_doc_default',
+    database: 'booklink',
+  };
+  config.swaggerdoc = {
+    dirScanner: './app/controller',
+    apiInfo: {
+      title: 'egg-swagger',
+      description: 'swagger-ui for egg',
+      version: '1.0.0',
+    },
+    schemes: ['http', 'https'],
+    consumes: ['application/json'],
+    produces: ['application/json'],
+    securityDefinitions: {
+      // apikey: {
+      //   type: 'apiKey',
+      //   name: 'clientkey',
+      //   in: 'header',
+      // },
+      // oauth2: {
+      //   type: 'oauth2',
+      //   tokenUrl: 'http://petstore.swagger.io/oauth/dialog',
+      //   flow: 'password',
+      //   scopes: {
+      //     'write:access_token': 'write access_token',
+      //     'read:access_token': 'read access_token',
+      //   },
+      // },
+    },
+    enableSecurity: false,
+    // enableValidate: true,
+    routerMap: false,
+    enable: true,
   };
   return {
     ...config,
