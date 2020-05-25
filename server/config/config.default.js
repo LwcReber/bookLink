@@ -16,13 +16,14 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1589385077204_7555';
 
   // add your middleware config here
-  config.middleware = ['errorHandler', 'jwtHandler'];
+  config.middleware = ['errorHandler'];
   // 只对 /api 前缀的 url 路径生效
   config.errorHandler = {
     match: '/api'
   }
   config.jwt = {
     secret: 'Aa1280Id*kl',
+    match: '/^\/api/'
   }
   // 跨域配置
   config.cors = {
@@ -52,11 +53,12 @@ module.exports = appInfo => {
     consumes: ['application/json'],
     produces: ['application/json'],
     securityDefinitions: {
-      // apikey: {
-      //   type: 'apiKey',
-      //   name: 'clientkey',
-      //   in: 'header',
-      // },
+      apikey: {
+        type: 'apiKey',
+        securityDefinition: 'Bearer',
+        name: 'Authorization',
+        in: 'header',
+      },
       // oauth2: {
       //   type: 'oauth2',
       //   tokenUrl: 'http://petstore.swagger.io/oauth/dialog',
@@ -67,8 +69,8 @@ module.exports = appInfo => {
       //   },
       // },
     },
-    enableSecurity: false,
-    // enableValidate: true,
+    enableSecurity: true,
+    enableValidate: true,
     routerMap: false,
     enable: true,
   };

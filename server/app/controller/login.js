@@ -4,7 +4,7 @@ const Controller = require('egg').Controller;
 const bcrypt = require('bcryptjs');
 
 /**
- * @controller login 用户接口
+ * @controller  登录获取token接口
  */
 class LoginController extends Controller {
   /**
@@ -30,18 +30,15 @@ class LoginController extends Controller {
       const pwdMatchFlag = bcrypt.compareSync(body.password, user.password);
       if (pwdMatchFlag) {
         // 密码验证通过
-        ctx.status = 200
         const token = ctx.app.jwt.sign({
           name: body.name,
         }, ctx.app.config.jwt.secret, { expiresIn: 60 * 60 });
-        ctx.body = { code: 0, data: token };
+        ctx.helper.success({ ctx, res: { token } })
       } else {
-        ctx.status = 200
-        ctx.body = { code: -1, msg: '密码错误' }
+        ctx.helper.error({ctx, msg: '密码错误' })
       }
     } else {
-      ctx.status = 200
-      ctx.body = { code: -1, msg: '用户查询失败' }
+      ctx.helper.error({ctx, msg: '无此用户' })
     }
   }
 }

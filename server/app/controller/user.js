@@ -30,14 +30,14 @@ class UserController extends Controller {
           name: decode.name
         }
       });
-      ctx.status = 200;
       if (user) {
         const { id, name, created_at } = user;
-        ctx.body = { code: 0, data: { id, name, created_at } };
+        const res = { code: 0, data: { id, name, created_at } };
+        ctx.helper.success({ ctx, res })
+
       }
     } catch (error) {
-      ctx.status = 200;
-      ctx.body = {msg: '无此用户'};
+      ctx.helper.error({ ctx, msg: '无此用户' })
     }
   }
 
@@ -66,13 +66,12 @@ class UserController extends Controller {
       }
     });
     if (user) {
-      ctx.status = 200;
-      ctx.body = { code: -1, data: null, msg: '该用户名已被注册' };
+      ctx.helper.error({ ctx, msg: '该用户名已被注册' })
       return
     }
     const id = await service.user.create(body);
-    ctx.status = 200;
-    ctx.body = { code: 0, data: { id } };
+    ctx.helper.success({ ctx, res: { id } })
+
   }
 
   async update() {
