@@ -17,5 +17,13 @@ module.exports = {
   swaggerdoc: {
     enable: true,
     package: 'egg-swagger-doc',
+  },
+  jwt: {
+    enable: true,
+    package: 'egg-jwt',
+  },
+  cors: {
+    enable: true,
+    package: 'egg-cors',
   }
 };

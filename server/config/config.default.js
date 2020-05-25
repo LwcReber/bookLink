@@ -16,11 +16,19 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1589385077204_7555';
 
   // add your middleware config here
-  config.middleware = ['errorHandler'];
+  config.middleware = ['errorHandler', 'jwtHandler'];
   // 只对 /api 前缀的 url 路径生效
   config.errorHandler = {
     match: '/api'
   }
+  config.jwt = {
+    secret: 'Aa1280Id*kl',
+  }
+  // 跨域配置
+  config.cors = {
+    origin: '*',
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH',
+  };
   // add your user config here
   const userConfig = {
     // myAppName: 'egg',
