@@ -22,8 +22,7 @@ class UserController extends Controller {
   async index() {
     const ctx = this.ctx;
     let token = ctx.request.header.authorization;
-    token = token.substring(7)
-    const decode = ctx.app.jwt.verify(token, ctx.app.config.jwt.secret);
+    const decode = ctx.helper.tokenDecode({ctx, token})
     try {
       const user = await ctx.model.User.findOne({
         where: {

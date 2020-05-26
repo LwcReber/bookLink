@@ -1,6 +1,8 @@
 'use strict';
 
 const Controller = require('egg').Controller;
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
 function toInt(str) {
   if (typeof str === 'number') return str;
@@ -14,13 +16,25 @@ function toInt(str) {
 class ArticleController extends Controller {
   /**
    * @summary 文章列表
-   * @router get /api/v1/article
-   * @response 200 baseResponse
+   * @router post /api/v1/article/list
+   * @Request query number *pageSize // 每次分页大小
+   * @Request query number *pageIndex // 第几页 0 开始
+   * @Request body getArticleList body // 筛选参数
+   * @response 200 baseResponse 
    */
-  async index() {
+  async list() {  
     const ctx = this.ctx;
-    // const query = { limit: toInt(ctx.query.limit), offset: toInt(ctx.query.offset) };
-    const res = await ctx.model.Article.findAll();
+    const body = ctx.request.body
+    let query = { limit: toInt(ctx.query.pageSize), offset: toInt(ctx.query.pageIndex) };
+    if (body) {
+      let where = {}
+      body.create_id && (where.create_id = body.create_id)
+      body.title.trim() && (where.title = {[Op.like]: '%' + body.title + '%'}) // 标题模糊搜索
+      query.where = where
+    }
+    console.log(query, '---------------')
+    const data = await ctx.model.Article.findAndCountAll(query);
+    const res = { list: data.rows, total: data.count }
     ctx.helper.success({ ctx, res })
   }
   /**
