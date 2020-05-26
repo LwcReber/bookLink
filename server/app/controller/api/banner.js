@@ -45,6 +45,7 @@ class BannerController extends Controller {
    * @description 新增banner
    * @router post /api/v1/banner
    * @request body createBannerRequest *body
+   * @Bearer
    * @response 200 baseResponse
    */
   async create() {
@@ -57,19 +58,27 @@ class BannerController extends Controller {
     ctx.helper.success({ ctx, res: { id } })
 
   }
-
+  /**
+   * @summary 更新banner
+   * @description 更新banner
+   * @router post /api/v1/banner/{id}
+   * @request path integer id  *query
+   * @request body createBannerRequest *body
+   * @Bearer
+   * @response 200 baseResponse
+   */
   async update() {
     const ctx = this.ctx;
     const id = toInt(ctx.params.id);
-    const user = await ctx.model.User.findByPk(id);
-    if (!user) {
-      ctx.status = 404;
+    const banner = await ctx.model.Banner.findByPk(id);
+    if (!banner) {
+      ctx.helper.error({ ctx, msg: '没有该banner' })
       return;
     }
 
-    const { name, age } = ctx.request.body;
-    await user.update({ name, age });
-    ctx.body = user;
+    const { title, content, imgUrl, relateId } = ctx.request.body;
+    await banner.update({ title, content, img_url: imgUrl, relate_id: relateId });
+    ctx.helper.success({ ctx, res: banner })
   }
 
   async destroy() {

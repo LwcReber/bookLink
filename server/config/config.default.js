@@ -53,9 +53,8 @@ module.exports = appInfo => {
     consumes: ['application/json'],
     produces: ['application/json'],
     securityDefinitions: {
-      apikey: {
+      Bearer: {
         type: 'apiKey',
-        securityDefinition: 'Bearer',
         name: 'Authorization',
         in: 'header',
       },

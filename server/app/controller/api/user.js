@@ -16,7 +16,7 @@ class UserController extends Controller {
    * @summary 根据token查询用户
    * @description 根据token查询用户
    * @router get /api/v1/user
-   * @Request header string authorization
+   * @Bearer
    * @response 200 baseResponse
    */
   async index() {
@@ -51,6 +51,7 @@ class UserController extends Controller {
    * @description 创建用户
    * @router post /api/v1/user
    * @request body createUserRequest *body
+   * @Bearer
    * @response 200 baseResponse 创建成功
    */
   async create() {
