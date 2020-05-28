@@ -71,7 +71,7 @@ export default {
           { min: 5, message: '最少5个字符', trigger: 'blur' }
         ],
         validateNum: [
-          { required: true, message: '请输入验证码', trigger: 'blur' },
+          { required: false, message: '请输入验证码', trigger: 'blur' },
           { len: 4, message: '必须4个字符', trigger: 'blur' }
         ]
       },
@@ -98,27 +98,31 @@ export default {
     loginSubmit () {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
-          this.$message({
-            message: '登录成功',
-            type: 'success',
-            offset: 100,
-            duration: 1500
+          this.$store.dispatch('user/login', this.loginForm).then(success => {
+            if (success) {
+              this.$message({
+                message: '注册成功，正在重新跳转',
+                type: 'success',
+                duration: 1500
+              })
+              setTimeout(() => {
+                this.$router.replace('/')
+              }, 1500)
+            }
+          }).catch(err => {
+            this.$message({
+              message: err,
+              type: 'error',
+              duration: 1500
+            })
           })
-          this.$router.replace('/')
         }
       })
     },
     signSubmit () {
       this.$refs.signForm.validate((valid) => {
         if (valid) {
-          this.$message({
-            message: '注册成功，正在重新跳转',
-            type: 'success',
-            duration: 1500
-          })
-          setTimeout(() => {
-            this.$router.replace('/')
-          }, 1500)
+
         }
       })
     },

@@ -25,7 +25,7 @@ export default {
   data () {
     return {
       search: '',
-      focus: 'blur' // 搜索input focus状态， focus， blur
+      focus: '' // 搜索input focus状态， focus， blur
     }
   },
   computed: {

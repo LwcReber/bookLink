@@ -10,7 +10,10 @@
 <script>
 import Nav from '@/components/Nav'
 export default {
-  components: { Nav }
+  components: { Nav },
+  created () {
+    this.$store.dispatch('user/getUseInfo')
+  }
 }
 </script>
 <style lang="scss" scoped>

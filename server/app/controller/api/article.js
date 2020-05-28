@@ -17,9 +17,9 @@ class ArticleController extends Controller {
   /**
    * @summary 文章列表
    * @router post /api/v1/article/list
+   * @Request body getArticleList body // 筛选参数
    * @Request query number *pageSize // 每次分页大小
    * @Request query number *pageIndex // 第几页 0 开始
-   * @Request body getArticleList body // 筛选参数
    * @response 200 baseResponse 
    */
   async list() {  

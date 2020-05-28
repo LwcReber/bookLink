@@ -12,10 +12,13 @@ module.exports = app => {
   // 登录
   apiV1Router.post('/login', login.login);
   // 用户
-  apiV1Router.resources('user', '/user', jwt, user);
+  apiV1Router.get('/user', jwt, user.index)
+  // apiV1Router.get('/user/:id', user.show)
+  apiV1Router.post('/user', user.create)
+  // apiV1Router.post('/user/:id', jwt, user.update)
   
   // banner
-  apiV1Router.get('banner', banner.index)
+  apiV1Router.get('/banner', banner.index)
   apiV1Router.get('/banner/:id', banner.show)
   apiV1Router.post('/banner', jwt, banner.create)
   apiV1Router.post('/banner/:id', jwt, banner.update)

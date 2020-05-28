@@ -42,4 +42,20 @@ const router = new VueRouter({
   routes
 })
 
+router.beforeEach((to, from, next) => {
+  if (to.meta.auth) {
+    const token = localStorage.getItem('token')
+    if (token) {
+      next()
+    } else {
+      next({
+        path: '/login',
+        query: { redirect: to.path }
+      })
+    }
+  } else {
+    next()
+  }
+})
+
 export default router

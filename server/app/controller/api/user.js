@@ -30,8 +30,8 @@ class UserController extends Controller {
         }
       });
       if (user) {
-        const { id, name, created_at } = user;
-        const res = { code: 0, data: { id, name, created_at } };
+        const { id, name, created_at, avatar } = user;
+        const res = { code: 0, data: { id, name, created_at, avatar } };
         ctx.helper.success({ ctx, res })
 
       }
@@ -50,7 +50,6 @@ class UserController extends Controller {
    * @description 创建用户
    * @router post /api/v1/user
    * @request body createUserRequest *body
-   * @Bearer
    * @response 200 baseResponse 创建成功
    */
   async create() {

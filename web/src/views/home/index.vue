@@ -16,6 +16,7 @@
 <script>
 import { Carousel, CarouselItem, Backtop } from 'element-ui'
 import ListView from '@/components/ListView'
+import { getBanners } from '@/api/banner'
 export default {
   components: { Carousel, CarouselItem, ListView, Backtop },
   data () {
@@ -23,6 +24,11 @@ export default {
       list: [1, 3, 4, 5, 55, 6, 7, 8, 18, 99],
       noMore: false
     }
+  },
+  created () {
+    getBanners().then(data => {
+      console.log(data)
+    })
   },
   methods: {
     loadList (closeLoading, setnoMore) {
