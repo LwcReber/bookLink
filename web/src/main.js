@@ -5,11 +5,12 @@ import store from './store'
 import './styles/index.scss'
 import 'flex.css'
 import 'element-ui/lib/theme-chalk/index.css'
-import { InfiniteScroll, Loading, Message } from 'element-ui'
+import { InfiniteScroll, Loading, Message, MessageBox } from 'element-ui'
 Vue.config.productionTip = false
 Vue.use(InfiniteScroll)
 Vue.use(Loading)
 Vue.prototype.$message = Message
+Vue.prototype.$messageBox = MessageBox
 new Vue({
   router,
   store,

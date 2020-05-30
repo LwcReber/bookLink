@@ -8,20 +8,25 @@
         </el-input>
       </div>
       <div flex="cross:center" class="right">
-        <view-avatar :text="userName" class="user-avatar" v-if="token" quickWidth="40px" borderRadius="50%" src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3238317745,514710292&fm=26&gp=0.jpg"></view-avatar>
+        <Dropdown placement="bottom" v-if="isLogin">
+          <view-avatar :text="userName" class="user-avatar" quickWidth="40px" borderRadius="50%" src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3238317745,514710292&fm=26&gp=0.jpg"></view-avatar>
+          <DropdownMenu slot="dropdown">
+            <DropdownItem @click.native="$store.dispatch('user/logout')">退出</DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
         <span v-else @click="toPath('login')" class="login">登录</span>
-        <span @click="toPath('write')" class="write">写文章</span>
+        <span v-if="isLogin" @click="toPath('write')" class="write">写文章</span>
       </div>
     </div>
   </nav>
 </template>
 
 <script>
-import { Input } from 'element-ui'
+import { Input, Dropdown, DropdownItem, DropdownMenu } from 'element-ui'
 import ViewAvatar from 'view-avatar'
 import { mapState } from 'vuex'
 export default {
-  components: { 'el-input': Input, ViewAvatar },
+  components: { 'el-input': Input, ViewAvatar, Dropdown, DropdownItem, DropdownMenu },
   data () {
     return {
       search: '',
@@ -30,7 +35,7 @@ export default {
   },
   computed: {
     ...mapState({
-      token: state => state.user.token,
+      isLogin: state => state.user.isLogin,
       avatar: state => state.user.avatar,
       userName: state => state.user.userName
     })
@@ -103,6 +108,7 @@ export default {
 .user-avatar {
   width: 40px;
   height: 40px;
+  cursor: pointer;
 }
 
 </style>

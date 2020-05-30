@@ -20,7 +20,8 @@ class UserService extends Service {
     password = this.passwordCrypt(password);
     console.log(password)
     const user = await ctx.model.User.create({ name, password });
-    return user.id;
+    const token = ctx.helper.signToken({ctx, name})
+    return { id: user.id, token };
   }
 }
 module.exports = UserService;

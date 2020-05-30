@@ -1,5 +1,6 @@
 import axios from 'axios'
 import store from '@/store'
+import { Message } from 'element-ui'
 const instance = axios.create({
   baseURL: 'http://127.0.0.1:7001/api/v1',
   timeout: 10000
@@ -25,30 +26,46 @@ instance.interceptors.response.use(function (response) {
   const res = response.data
   if (res.code === 0) {
     return response
-  }
-}, error => {
-  if (error && error.response) {
-    switch (error.response.status) {
-      case 401:
-        // 清空
-        store.dispatch('user/logout')
-        break
-        // 跳转
-      case 400:
-        error.message = '错误请求'
-        break
-      case 403:
-        error.message = '拒绝访问'
-        break
-      case 404:
-        error.message = '请求错误'
-        break
-      case 500:
-        error.message = '服务端出错'
-        break
-    }
   } else {
-    error.message = '网络异常'
+    Message.closeAll()
+    Message({ message: res.msg, type: 'error' })
+  }
+}, (error) => {
+  try {
+    const config = error.config
+    console.log(config)
+    const response = error.response
+    let showErr = true
+    if (response) {
+      switch (error.response.status) {
+        case 401:
+          // 清空
+          if (!(config.hasOwnProperty('notLogin') && config.notLogin)) {
+            store.dispatch('user/logout')
+          }
+          showErr = false
+          break
+          // 跳转
+        case 400:
+          error.message = '错误请求'
+          break
+        case 403:
+          error.message = '拒绝访问'
+          break
+        case 404:
+          error.message = '请求错误'
+          break
+        case 500:
+          error.message = '服务端出错'
+          break
+      }
+    } else {
+      error.message = '网络异常'
+    }
+    showErr && Message({ message: error.message, type: 'error' })
+  } catch (err) {
+    console.log(err)
+    return Promise.reject(err)
   }
   // 对响应错误做点什么
   return Promise.reject(error)

@@ -18,11 +18,18 @@ module.exports = {
     }
     ctx.status = 200
   },
+  // token解析
   tokenDecode ({ctx, token}) {
     token = token.substring(7)
     const decode = ctx.app.jwt.verify(token, ctx.app.config.jwt.secret);
     return decode
+  },
+  // token生成
+  signToken ({ctx, name}) {
+    const token = ctx.app.jwt.sign({
+      name,
+    }, ctx.app.config.jwt.secret, { expiresIn: 60 * 60 });
+    return token
   }
 }
-
 

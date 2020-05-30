@@ -8,6 +8,7 @@ export default {
   state: {
     isLogin: !!localStorage.getItem('token'),
     userName: '',
+    userId: '', // 用户id
     avatar: '' // 头像
   },
   mutations: {
@@ -16,14 +17,18 @@ export default {
     },
     setUserInfo (state, user) {
       state.userName = user.name
+      state.userId = user.id
       state.avatar = user.avatar
     }
   },
   actions: {
-    getUseInfo ({ commit, state }) {
-      if (state.isLogin) {
+    getUseInfo ({ commit, state, dispatch }) {
+      if (state.isLogin && !state.userId) {
         return getUseInfo().then(({ code, data }) => {
           commit('setUserInfo', data)
+        }).catch(() => {
+          console.log('cathc')
+          dispatch('clearUserData')
         })
       }
     },
@@ -39,9 +44,14 @@ export default {
         return false
       })
     },
-    logout ({ commit }) {
+    clearUserData ({ commit }) {
       commit('setLoginState', false)
       removeToken()
+      // 清空用户数据
+      commit('setUserInfo', { name: '', avatar: '' })
+    },
+    logout ({ dispatch }) {
+      dispatch('clearUserData')
       router.push('/login')
     }
   }

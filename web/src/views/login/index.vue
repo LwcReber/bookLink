@@ -19,7 +19,7 @@
             <el-input clearable placeholder="请输入用户名" v-model="loginForm.name"></el-input>
           </form-item>
           <form-item prop="password">
-            <el-input clearable @blur="actionMask('close')" @focus="actionMask('show')" @ type="password" placeholder="请输入密码" v-model="loginForm.password"></el-input>
+            <el-input clearable @blur="actionMask('close')" @focus="actionMask('show')" type="password" placeholder="请输入密码" v-model="loginForm.password"></el-input>
           </form-item>
           <form-item prop="validateNum">
             <el-input clearable class="validate-num" placeholder="验证码" v-model="loginForm.validateNum"></el-input>
@@ -37,7 +37,7 @@
             <el-input clearable placeholder="请输入用户名" v-model="signForm.name"></el-input>
           </form-item>
           <form-item prop="password">
-            <el-input clearable placeholder="请输入密码" v-model="signForm.password"></el-input>
+            <el-input type="password" clearable placeholder="请输入密码" v-model="signForm.password"></el-input>
           </form-item>
           <form-item>
             <Button class="submit-btn" @click="signSubmit" type="primary">注册</Button>
@@ -50,6 +50,8 @@
 
 <script>
 import { Tabs, TabPane, Form, FormItem, Input, Button } from 'element-ui'
+import { register } from '@/api/user'
+import { setToken } from '@/utils/auth'
 export default {
   components: { 'el-tabs': Tabs, 'el-tab-pane': TabPane, Form, FormItem, 'el-input': Input, Button },
   data () {
@@ -101,7 +103,7 @@ export default {
           this.$store.dispatch('user/login', this.loginForm).then(success => {
             if (success) {
               this.$message({
-                message: '注册成功，正在重新跳转',
+                message: '登录成功，正在重新跳转',
                 type: 'success',
                 duration: 1500
               })
@@ -109,12 +111,6 @@ export default {
                 this.$router.replace('/')
               }, 1500)
             }
-          }).catch(err => {
-            this.$message({
-              message: err,
-              type: 'error',
-              duration: 1500
-            })
           })
         }
       })
@@ -122,7 +118,17 @@ export default {
     signSubmit () {
       this.$refs.signForm.validate((valid) => {
         if (valid) {
-
+          register(this.signForm).then((res) => {
+            this.$messageBox.confirm('注册成功', '提示', {
+              confirmButtonText: '确定',
+              type: 'success'
+            }).then(() => {
+              const data = res.data
+              this.$store.commit('user/setLoginState', true)
+              setToken(data.token)
+              this.$router.push('/')
+            })
+          })
         }
       })
     },

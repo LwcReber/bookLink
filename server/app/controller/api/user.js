@@ -31,9 +31,8 @@ class UserController extends Controller {
       });
       if (user) {
         const { id, name, created_at, avatar } = user;
-        const res = { code: 0, data: { id, name, created_at, avatar } };
+        const res = { id, name, created_at, avatar };
         ctx.helper.success({ ctx, res })
-
       }
     } catch (error) {
       ctx.helper.error({ ctx, msg: '无此用户' })
@@ -64,12 +63,13 @@ class UserController extends Controller {
         name: body.name
       }
     });
+    console.log(user)
     if (user) {
       ctx.helper.error({ ctx, msg: '该用户名已被注册' })
       return
     }
-    const id = await service.user.create(body);
-    ctx.helper.success({ ctx, res: { id } })
+    const userData = await service.user.create(body);
+    ctx.helper.success({ ctx, res: userData })
 
   }
 
