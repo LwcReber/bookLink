@@ -1,8 +1,8 @@
 <template>
   <div class="item">
     <slot></slot>
-    <span @click="toDetail" class="title">发到沙发上</span>
-    <div class="content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus sed ullam optio culpa voluptate inventore! Eius pariatur nam, minima architecto omnis nostrum voluptatum quo nisi ipsam animi consequatur molestias nulla!</div>
+    <span @click="toDetail" class="title">{{data.title}}</span>
+    <div class="content" v-html="replace(data.content)"></div>
   </div>
 </template>
 
@@ -16,7 +16,10 @@ export default {
   },
   methods: {
     toDetail () {
-      this.$router.push('/detail/aaa')
+      this.$router.push({ path: `/detail/${this.data.id}`, query: { title: this.data.title } })
+    },
+    replace (content = '') {
+      return content.replace(/<.*?>/g, '')
     }
   }
 }
@@ -27,7 +30,7 @@ export default {
     border-bottom: 1px solid #eee;
     .title {
       font-size: 18px;
-      margin: 10px 0;
+      margin: 10px 0 0;
       display: inline-block;
       box-sizing: border-box;
       font-weight: bold;
@@ -37,7 +40,14 @@ export default {
       }
     }
     .content {
-      padding-bottom: 10px;
+      margin-bottom: 10px;
+      text-overflow: -o-ellipsis-lastline;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
     }
   }
 </style>

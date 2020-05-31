@@ -22,7 +22,6 @@ export default {
     'indent',
     'outdent',
     'divider',
-    'table',
     'image',
     'link',
     'divider',

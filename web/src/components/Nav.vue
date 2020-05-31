@@ -14,8 +14,8 @@
             <DropdownItem @click.native="$store.dispatch('user/logout')">退出</DropdownItem>
           </DropdownMenu>
         </Dropdown>
-        <span v-else @click="toPath('login')" class="login">登录</span>
-        <span v-if="isLogin" @click="toPath('write')" class="write">写文章</span>
+        <router-link to="/login" v-else class="login">登录</router-link>
+        <router-link to="/write" v-if="isLogin" class="write">写文章</router-link>
       </div>
     </div>
   </nav>
@@ -46,7 +46,7 @@ export default {
       this.$router.push(path)
     },
     searchContent () {
-      this.$router.push({ path: '/search', query: { q: this.search.trim() } })
+      this.$router.push({ path: '/search', query: { query: this.search.trim() } })
     }
   }
 }
@@ -62,9 +62,10 @@ export default {
   z-index: 1000;
   background: #fff;
   border-bottom: 1px solid #eee;
+  box-shadow: 0 0 8px 0 #aaa;
   .content {
     height: 50px;
-    max-width: 1200px;
+    max-width: 1000px;
     margin: auto
   }
   .home {

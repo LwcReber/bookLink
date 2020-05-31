@@ -2,18 +2,17 @@
   <div class="detail">
     <div class="page container">
       <h3 class="title">{{title}}</h3>
-      <div class="info">
-        <span>作者: {{user}} </span>
-        <span> 时间： {{created}}</span>
-      </div>
+      <!-- <div class="info">
+        <span>作者</span>
+        <span>时间： 2020/03/02 12:00</span>
+      </div> -->
       <div class="content" v-html="content"></div>
     </div>
   </div>
 </template>
 
 <script>
-import { articleDetail } from '@/api/article'
-
+import { getBannerDetail } from '@/api/banner'
 export default {
   computed: {
     id () {
@@ -25,17 +24,13 @@ export default {
   },
   data () {
     return {
-      content: '',
-      author: '',
-      created: '',
-      user: ''
+      content: ''
     }
   },
   created () {
-    articleDetail(this.id).then(({ data }) => {
-      this.user = data.create_by.name
+    console.log(this.id)
+    getBannerDetail(this.id).then(({ data }) => {
       this.content = data.content
-      this.created = data.created_at
     })
   }
 }

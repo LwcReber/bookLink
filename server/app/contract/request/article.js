@@ -7,6 +7,8 @@ module.exports = {
   },
   getArticleList: {
     create_id: { type: 'integer', required: false, description: '用户id' },
-    title: { type: 'string', required: false, description: '文章标题' }
+    title: { type: 'string', required: false, description: '文章标题' },
+    pageSize: { type: 'number', required: true, description: '每页大小' },
+    pageIndex: { type: 'number', required: true, description: '页码' }
   }
 };

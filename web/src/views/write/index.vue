@@ -7,44 +7,55 @@
         <Button @click="$router.push('/')" type="primary" size="mini" class="to-home">回到首页</Button>
       </div>
     </div>
-    <markdown-editor v-model="content" class="markdown" />
+    <markdown-editor @change="getValue" v-model="content" class="markdown" />
   </div>
 </template>
 
 <script>
 import MarkdownEditor from '../../../../components/MarkdownEditor'
 import { Input, Button } from 'element-ui'
+import { publishArticle } from '@/api/article'
 export default {
   components: { MarkdownEditor, 'el-input': Input, Button },
   data () {
     return {
       title: '',
-      content: ''
+      content: '',
+      contentVal: '' // 没有html标签的value值
     }
   },
   methods: {
+    getValue (value) {
+      console.log(value)
+    },
     publish () {
-      if (!this.title.trim()) {
+      const title = this.title.trim()
+      const content = this.content.trim()
+      if (!title.trim()) {
         this.$message({
           message: '请输入标题',
-          type: 'error'
+          type: 'error',
+          duration: 1000
         })
         return
       }
-      if (!this.content.trim()) {
+      if (!content.trim()) {
         this.$message({
           message: '请输入内容',
-          type: 'error'
+          type: 'error',
+          duration: 1000
         })
         return
       }
-      this.$message({
-        message: '发布成功',
-        type: 'success'
+      publishArticle({ title, content }).then(() => {
+        this.$message({
+          message: '发布成功',
+          type: 'success'
+        })
+        setTimeout(() => {
+          this.$router.push('/')
+        }, 500)
       })
-      setTimeout(() => {
-        this.$router.push('/')
-      }, 1000)
     }
   }
 }

@@ -1,16 +1,21 @@
 <template>
   <div class="infinite-list-wrapper" style="overflow:auto">
-    <ul
-      class="list"
-      v-infinite-scroll="load"
-      infinite-scroll-disabled="disabled">
-      <Item v-for="(item, index) in list" :key="item">{{index}}</Item>
-    </ul>
-    <div class="infinite-list-bottom">
-      <Button class="btn-load" @click="loadMore" v-if="!loading && !noMore">加载更多</Button>
-      <div v-if="!noMore" class="loading" element-loading-spinner="el-icon-loading" v-loading="loading"></div>
-      <p v-if="noMore">没有更多了</p>
+    <div  v-if="list.length">
+      <ul
+        class="list"
+        v-infinite-scroll="load"
+        infinite-scroll-disabled="disabled">
+        <Item :data="item" v-for="item in list" :key="item.id"></Item>
+      </ul>
+      <div class="infinite-list-bottom">
+        <Button class="btn-load" @click="loadMore" v-if="!loading && !noMore">加载更多</Button>
+        <div v-if="!noMore" class="loading" element-loading-spinner="el-icon-loading" v-loading="loading"></div>
+        <p class="no-more" v-if="noMore">没有更多了</p>
+      </div>
     </div>
+    <p v-else class="no-data">
+      暂无数据
+    </p>
   </div>
 </template>
 
@@ -48,7 +53,13 @@ export default {
 
 <style lang="scss" scoped>
   .infinite-list-wrapper {
-    max-width: 800px;
+    max-width: 600px;
+  }
+  .no-more,
+  .no-data {
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
   .infinite-list-bottom {
     margin-top: 10px;
@@ -58,7 +69,8 @@ export default {
   }
 
   .btn-load {
-    width: 500px;
+    width: 100%;
+    max-width: 600px;
     border-radius: 20px;
   }
 </style>

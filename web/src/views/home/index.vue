@@ -2,7 +2,10 @@
   <main class="page home">
     <!-- banner -->
     <Carousel height="250px" trigger="click">
-      <CarouselItem v-for="item in 4" :key="item">fsadfpdsaf</CarouselItem>
+      <CarouselItem :title="item.title" class="banner-item" @click.native="bannerDetail(item)" v-for="item in banners" :key="item.id">
+        <h4>{{item.title}}</h4>
+        <img class="banner-img" :src="item.img_url" alt="">
+      </CarouselItem>
     </Carousel>
     <Backtop :visibility-height="100" :bottom="100">
       <i class="el-icon-arrow-up"></i>
@@ -17,26 +20,44 @@
 import { Carousel, CarouselItem, Backtop } from 'element-ui'
 import ListView from '@/components/ListView'
 import { getBanners } from '@/api/banner'
+import { getArticles } from '@/api/article'
 export default {
   components: { Carousel, CarouselItem, ListView, Backtop },
   data () {
     return {
-      list: [1, 3, 4, 5, 55, 6, 7, 8, 18, 99],
-      noMore: false
+      list: [],
+      banners: [],
+      noMore: false,
+      page: 0,
+      pageSize: 10,
+      total: 0
     }
   },
   created () {
     getBanners().then(data => {
-      console.log(data)
+      this.banners = data.data
     })
+    this.loadList()
   },
   methods: {
-    loadList (closeLoading, setnoMore) {
-      setTimeout(() => {
-        this.list.push('aa' + Math.random() * 1000)
-        closeLoading()
-        setnoMore()
-      }, 1000)
+    bannerDetail (banner) {
+      // 如果有文章id则跳文章详情
+      if (banner.relate_id) {
+        this.$router.push({ path: 'detail/' + banner.relate_id })
+      } else {
+        this.$router.push({ path: 'banner/' + banner.id, query: { title: banner.title } })
+      }
+    },
+    loadList (closeLoading) {
+      getArticles({ pageIndex: this.page, pageSize: this.pageSize }).then(({ data }) => {
+        this.page++
+        this.list = [...this.list, ...data.list]
+        this.total = data.total
+        if (this.total <= this.list.length) {
+          this.noMore = true
+        }
+        closeLoading && closeLoading()
+      })
     }
   }
 }
@@ -45,6 +66,13 @@ export default {
 <style lang="scss" scoped>
   .home {
     padding: 0 10px;
+  }
+  .banner-item {
+    cursor: pointer;
+  }
+  .banner-img {
+    width: 100%;
+    height: 100%;
   }
 </style>
 <style lang="scss">

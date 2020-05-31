@@ -6,6 +6,7 @@
     height="500px"
     initialEditType="wysiwyg"
     previewStyle="vertical"
+    @change="onEditorChange"
     />
 </template>
 
@@ -15,7 +16,6 @@ import '@toast-ui/editor/dist/toastui-editor.css'
 import defaultOpt from './default-options'
 import { Editor } from '@toast-ui/vue-editor'
 import '@toast-ui/editor/dist/i18n/zh-cn'
-import { log } from 'util'
 
 export default {
   components: {
@@ -45,9 +45,13 @@ export default {
     this.init()
   },
   methods: {
+    onEditorChange (value) {
+      console.log(value)
+    },
     init () {
       this.$refs.toastuiEditor.invoke('on', 'change', () => {
         this.$emit('input', this.getHtml())
+        this.$emit('value', this.$refs.toastuiEditor.invoke('getValue'))
       })
     },
     scroll() {

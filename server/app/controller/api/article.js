@@ -18,21 +18,19 @@ class ArticleController extends Controller {
    * @summary 文章列表
    * @router post /api/v1/article/list
    * @Request body getArticleList body // 筛选参数
-   * @Request query number *pageSize // 每次分页大小
-   * @Request query number *pageIndex // 第几页 0 开始
    * @response 200 baseResponse 
    */
   async list() {  
     const ctx = this.ctx;
     const body = ctx.request.body
-    let query = { limit: toInt(ctx.query.pageSize), offset: toInt(ctx.query.pageIndex) };
-    if (body) {
-      let where = {}
-      body.create_id && (where.create_id = body.create_id)
-      body.title.trim() && (where.title = {[Op.like]: '%' + body.title + '%'}) // 标题模糊搜索
-      query.where = where
-    }
-    console.log(query, '---------------')
+    let where = {}
+    let query = {}
+    let size = toInt(body.pageSize)
+    let offset = toInt(body.pageIndex) * size
+    query = { limit: size, offset };
+    body.create_id && (where.create_id = body.create_id)
+    body.title && (where.title = {[Op.like]: '%' + body.title.trim() + '%'}) // 标题模糊搜索
+    query.where = where || {}
     const data = await ctx.model.Article.findAndCountAll(query);
     const res = { list: data.rows, total: data.count }
     ctx.helper.success({ ctx, res })
@@ -47,6 +45,9 @@ class ArticleController extends Controller {
   async show() {
     const ctx = this.ctx;
     const res = await ctx.model.Article.findByPk(toInt(ctx.params.id));
+    if (res.create_by) {
+      res.create_by = JSON.parse(res.create_by) || {}
+    }
     if (res) {
       ctx.helper.success({ ctx, res })
     } else {

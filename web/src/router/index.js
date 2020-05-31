@@ -10,12 +10,18 @@ const routes = [
     children: [
       {
         path: '',
+        meta: { keepAlive: true },
         component: () => import(/* webpackChunkName: "home" */ '../views/home')
       },
       {
         path: '/search',
         name: 'search',
         component: () => import(/* webpackChunkName: "search" */ '../views/search')
+      },
+      {
+        path: '/banner/:id',
+        name: 'banner',
+        component: () => import(/* webpackChunkName: "banner" */ '../views/banner')
       },
       {
         path: '/detail/:id',

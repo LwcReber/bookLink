@@ -119,7 +119,7 @@ export default {
       this.$refs.signForm.validate((valid) => {
         if (valid) {
           register(this.signForm).then((res) => {
-            this.$messageBox.confirm('注册成功', '提示', {
+            this.$messageBox.alert('注册成功', '提示', {
               confirmButtonText: '确定',
               type: 'success'
             }).then(() => {

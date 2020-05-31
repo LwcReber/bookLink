@@ -15,12 +15,12 @@ class ArticleService extends Service {
       });
       if (user) {
         let { title, content } = data;
-        const { id, name, created_at } = user
+        const { id, name, created_at, avatar } = user
         const article = {
           title, 
           content,
           create_id: user.id, // 创建者id
-          create_by: JSON.stringify({ id, name, created_at })
+          create_by: JSON.stringify({ id, name, created_at, avatar: avatar || 'http://img5.imgtn.bdimg.com/it/u=3392663359,4194879068&fm=26&gp=0.jpg' })
         }
         const narticle = await ctx.model.Article.create(article);
         return narticle.id;
