@@ -25,9 +25,9 @@ module.exports = {
     return decode
   },
   // token生成
-  signToken ({ctx, name}) {
+  signToken ({ctx, id}) {
     const token = ctx.app.jwt.sign({
-      name,
+      id,
     }, ctx.app.config.jwt.secret, { expiresIn: 60 * 60 });
     return token
   }

@@ -7,7 +7,7 @@ module.exports = app => {
   const apiV1Router = app.router.namespace('/api/v1');
   const { controller, jwt } = app;
 
-  const { user, banner, login, article } = controller.api;
+  const { user, banner, login, article, upload } = controller.api;
 
   // 登录
   apiV1Router.post('/login', login.login);
@@ -28,4 +28,7 @@ module.exports = app => {
   apiV1Router.get('/article/:id', article.show)
   apiV1Router.post('/article', jwt, article.create)
   apiV1Router.post('/article/:id', jwt, article.update)
+
+  apiV1Router.post('/upload', upload.create)
+
 }

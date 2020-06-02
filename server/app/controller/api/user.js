@@ -26,7 +26,7 @@ class UserController extends Controller {
     try {
       const user = await ctx.model.User.findOne({
         where: {
-          name: decode.name
+          id: decode.id
         }
       });
       if (user) {

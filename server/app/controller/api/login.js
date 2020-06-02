@@ -30,7 +30,7 @@ class LoginController extends Controller {
       const pwdMatchFlag = bcrypt.compareSync(body.password, user.password);
       if (pwdMatchFlag) {
         // 密码验证通过
-        const token =  ctx.helper.signToken({ctx, name: body.name})
+        const token =  ctx.helper.signToken({ctx, id: user.id})
         ctx.helper.success({ ctx, res: { token } })
       } else {
         ctx.helper.error({ctx, msg: '密码错误' })
