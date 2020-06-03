@@ -28,7 +28,7 @@ module.exports = {
   signToken ({ctx, id}) {
     const token = ctx.app.jwt.sign({
       id,
-    }, ctx.app.config.jwt.secret, { expiresIn: 60 * 60 });
+    }, ctx.app.config.jwt.secret, { expiresIn: 60 * 60 * 60 });
     return token
   }
 }

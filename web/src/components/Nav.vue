@@ -2,7 +2,7 @@
   <nav class="nav">
     <div flex="cross:center main:justify" class="content">
       <div>
-        <span class="home" @click="toPath('/')">首页</span>
+        <a href="/" class="home" >首页</a>
         <el-input @blur="focus = 'blur'" @focus="focus = 'focus'" prefix-icon="el-icon-search" @keydown.enter.native="searchContent" :class="{'search-ipt': true, 'expand': focus === 'focus', 'clspand': focus === 'blur'}" size="small" placeholder="搜索" clearable v-model="search">
           <!-- <i slot="append" class="icon el-icon-search"></i> -->
         </el-input>
@@ -41,9 +41,8 @@ export default {
     })
   },
   methods: {
-    toPath (path) {
+    toHome (path) {
       this.search = ''
-      this.$router.push(path)
     },
     searchContent () {
       this.$router.push({ path: '/search', query: { query: this.search.trim() } })
