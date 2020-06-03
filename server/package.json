@@ -19,6 +19,7 @@
     "egg-swagger-doc": "^2.3.2",
     "egg-validate": "^2.0.2",
     "image-downloader": "^4.0.1",
+    "md5": "^2.2.1",
     "mysql2": "^2.1.0",
     "stream-wormhole": "^1.1.0"
   },
