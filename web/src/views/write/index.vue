@@ -7,7 +7,7 @@
         <Button @click="$router.push('/')" type="primary" size="mini" class="to-home">回到首页</Button>
       </div>
     </div>
-    <markdown-editor @change="getValue" v-model="content" class="markdown" />
+    <markdown-editor v-model="content" class="markdown" />
   </div>
 </template>
 
@@ -25,9 +25,6 @@ export default {
     }
   },
   methods: {
-    getValue (value) {
-      console.log(value)
-    },
     publish () {
       const title = this.title.trim()
       const content = this.content.trim()

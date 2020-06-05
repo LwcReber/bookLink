@@ -5,18 +5,18 @@ import Layout from '@/layout'
 const tableRouter = {
   path: '/table',
   component: Layout,
-  redirect: '/table/complex-table',
-  name: 'Table',
+  redirect: '/table/banner',
+  name: 'banner',
   meta: {
     title: 'Table',
     icon: 'table'
   },
   children: [
     {
-      path: 'complex-table',
-      component: () => import('@/views/table/complex-table'),
+      path: 'banner',
+      component: () => import('@/views/banner'),
       name: 'ComplexTable',
-      meta: { title: 'Complex Table' }
+      meta: { title: 'Banner' }
     }
   ]
 }

@@ -9,6 +9,8 @@
     "lint-fix": "eslint --fix --ext .js,.vue src"
   },
   "dependencies": {
+    "@toast-ui/editor": "^2.1.2",
+    "@toast-ui/vue-editor": "^2.1.2",
     "axios": "^0.19.2",
     "codemirror": "^5.53.2",
     "core-js": "^3.6.4",
