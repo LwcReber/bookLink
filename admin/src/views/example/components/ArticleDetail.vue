@@ -23,7 +23,6 @@
         </el-row>
 
         <el-form-item prop="content" style="margin-bottom: 30px;">
-          <!-- <Tinymce ref="editor" v-model="postForm.content" :height="400" /> -->
           <markdown-editor v-model="postForm.content" class="markdown" />
         </el-form-item>
 
@@ -33,8 +32,7 @@
 </template>
 
 <script>
-// import Tinymce from '@/components/Tinymce'
-import MarkdownEditor from './MarkdownEditor'
+import MarkdownEditor from '../../../../../components/MarkdownEditor'
 
 import MDinput from '@/components/MDinput'
 import Sticky from '@/components/Sticky' // 粘性header组件

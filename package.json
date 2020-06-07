@@ -1,0 +1,22 @@
+{
+  "name": "booklink",
+  "version": "1.0.0",
+  "description": "仿照简书部分功能的前后端、后台管理系统一体化的项目",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"cd ./admin && npm run dev\" \"cd ./server/ && npm run dev\" \"cd ./web && npm run serve\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LwcReber/bookLink.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LwcReber/bookLink/issues"
+  },
+  "homepage": "https://github.com/LwcReber/bookLink#readme",
+  "devDependencies": {
+    "concurrently": "^5.2.0"
+  }
+}
