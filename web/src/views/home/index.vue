@@ -35,7 +35,7 @@ export default {
   },
   created () {
     getBanners().then(data => {
-      this.banners = data.data
+      this.banners = data.data.list
     })
     this.loadList()
   },

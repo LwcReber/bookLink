@@ -20,7 +20,8 @@ class BannerController extends Controller {
   async index() {
     const ctx = this.ctx;
     // const query = { limit: toInt(ctx.query.limit), offset: toInt(ctx.query.offset) };
-    const res = await ctx.model.Banner.findAll();
+    const data = await ctx.model.Banner.findAndCountAll();
+    const res = { list: data.rows, total: data.count }
     ctx.helper.success({ ctx, res })
   }
   /**
@@ -76,8 +77,8 @@ class BannerController extends Controller {
       return;
     }
 
-    const { title, content, imgUrl, relateId } = ctx.request.body;
-    await banner.update({ title, content, img_url: imgUrl, relate_id: relateId });
+    const { title, content, img_url, relate_id } = ctx.request.body;
+    await banner.update({ title, content, img_url, relate_id });
     ctx.helper.success({ ctx, res: banner })
   }
 

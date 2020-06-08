@@ -20,8 +20,8 @@
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <view-avatar class="user-avatar" text="BookLink">
-            <span slot="text">BK</span>
+          <view-avatar border-radius="50%" class="user-avatar">
+            <span>BK</span>
           </view-avatar>
           <i class="el-icon-caret-bottom" />
         </div>
@@ -147,11 +147,6 @@ export default {
           cursor: pointer;
           width: 40px;
           height: 40px;
-          /deep/ {
-            .avatar {
-              border-radius: 40px;
-            }
-          }
         }
 
         .el-icon-caret-bottom {

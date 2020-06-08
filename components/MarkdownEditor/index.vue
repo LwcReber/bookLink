@@ -16,17 +16,26 @@ import '@toast-ui/editor/dist/toastui-editor.css'
 import defaultOpt from './default-options'
 import { Editor } from '@toast-ui/vue-editor'
 import '@toast-ui/editor/dist/i18n/zh-cn'
-
+// import mixin from '../../mixin/emitter'
 export default {
   components: {
     editor: Editor
   },
+  // mixins: [mixin],
   data () {
     return {
       editorOptions: {
         hideModeSwitch: true,
         ...defaultOpt
       }
+    }
+  },
+  inject: {
+    elForm: {
+      default: ''
+    },
+    elFormItem: {
+      default: ''
     }
   },
   props: {
@@ -38,6 +47,7 @@ export default {
     value (newVal, old) {
       if (newVal !== old && newVal !== this.getHtml()) {
         this.$refs.toastuiEditor.invoke('setValue', newVal)
+        this.dispatch('ElFormItem', 'el.form.change', [newVal]);
       }
     }
   },
@@ -45,6 +55,20 @@ export default {
     this.init()
   },
   methods: {
+    dispatch(componentName, eventName, params) {
+      var parent = this.$parent || this.$root;
+      var name = parent.$options.componentName;
+      while (parent && (!name || name !== componentName)) {
+        parent = parent.$parent;
+
+        if (parent) {
+          name = parent.$options.componentName;
+        }
+      }
+      if (parent) {
+        parent.$emit.apply(parent, [eventName].concat(params));
+      }
+    },
     onEditorChange (value) {
       console.log(value)
     },
