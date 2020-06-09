@@ -22,7 +22,8 @@ module.exports = app => {
   apiV1Router.get('/banner/:id', banner.show)
   apiV1Router.post('/banner', jwt, banner.create)
   apiV1Router.post('/banner/:id', jwt, banner.update)
-  
+  apiV1Router.delete('/banner/:id', jwt, banner.destroy)
+
   // article
   apiV1Router.post('/article/list', article.list)
   apiV1Router.get('/article/:id', article.show)

@@ -32,6 +32,9 @@
   .el-button--mini {
     padding: 7px 10px;
     min-width: 60px;
+    &:not(first) {
+      margin-left: 10px;
+    }
   }
 }
 

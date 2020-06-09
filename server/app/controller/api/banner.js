@@ -81,18 +81,25 @@ class BannerController extends Controller {
     await banner.update({ title, content, img_url, relate_id });
     ctx.helper.success({ ctx, res: banner })
   }
-
+  /**
+   * @summary 删除banner
+   * @description 删除banner
+   * @router delete /api/v1/banner/{id}
+   * @request path integer id  *query
+   * @Bearer
+   * @response 200 baseResponse
+   */
   async destroy() {
     const ctx = this.ctx;
     const id = toInt(ctx.params.id);
-    const user = await ctx.model.User.findByPk(id);
-    if (!user) {
-      ctx.status = 404;
+    const banner = await ctx.model.Banner.findByPk(id);
+    if (!banner) {
+      ctx.helper.error({ ctx, msg: '没有该banner' })
       return;
     }
 
-    await user.destroy();
-    ctx.status = 200;
+    await banner.destroy();
+    ctx.helper.success({ ctx, res: {id} })
   }
 }
 

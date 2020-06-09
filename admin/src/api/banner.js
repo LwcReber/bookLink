@@ -26,9 +26,16 @@ export function createBanner(data) {
 
 export function updateBanner(id, data) {
   return request({
-    url: '/v1/banner',
+    url: `/v1/banner/${id}`,
     method: 'post',
-    params: { id },
     data
   })
 }
+
+export function deleteBanner(id) {
+  return request({
+    url: `/v1/banner/${id}`,
+    method: 'delete'
+  })
+}
+

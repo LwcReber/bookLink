@@ -35,14 +35,27 @@
           {{ row.title }}
         </template>
       </el-table-column>
+      <el-table-column label="状态" class-name="status-col" width="100">
+        <template slot-scope="{row}">
+          <el-tag :type="row.status | statusFilter">
+            {{ row.status | statusText }}
+          </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="Actions" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             编辑
           </el-button>
-          <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
-            删除
-          </el-button>
+          <el-popconfirm
+            placement="top-start"
+            @onConfirm="handleDelete(row,$index)"
+            title="确定删除吗？"
+          >
+            <el-button slot="reference" v-if="row.status!='deleted'" size="mini" type="danger">
+              删除
+            </el-button>
+          </el-popconfirm>
         </template>
       </el-table-column>
     </el-table>
@@ -54,7 +67,12 @@
         <el-form-item label="Title" prop="title">
           <el-input v-model="temp.title" />
         </el-form-item>
-        <el-form-item label="banner图片" prop="image_url" style="margin-bottom: 30px;">
+        <el-form-item label="状态" prop="status">
+          <el-select v-model="temp.status" class="filter-item" placeholder="请选择状态">
+            <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="banner图片" prop="img_url" style="margin-bottom: 30px;">
           <Upload v-model="temp.img_url" />
         </el-form-item>
         <el-form-item label="是否关联文章" prop="isrelate">
@@ -83,40 +101,34 @@
         </el-button>
       </div>
     </el-dialog>
-
-    <el-dialog :visible.sync="dialogPvVisible" title="Reading statistics">
-      <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
-        <el-table-column prop="key" label="Channel" />
-        <el-table-column prop="pv" label="Pv" />
-      </el-table>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogPvVisible = false">Confirm</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
 <script>
-import { fetchList, createBanner, updateBanner } from '@/api/banner'
+import { fetchList, createBanner, updateBanner, deleteBanner } from '@/api/banner'
 import { Switch } from 'element-ui'
 import waves from '@/directive/waves' // waves directive
 import Upload from '@/components/Upload/SingleImage3'
 
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import MarkdownEditor from '../../../../components/MarkdownEditor'
-
+const statusOptions = [{ label: '上架', value: 'published' }, { label: '下架', value: 'draft' }]
 export default {
   name: 'ComplexTable',
   components: { Pagination, Upload, MarkdownEditor, 'el-switch': Switch },
   directives: { waves },
   filters: {
-    statusFilter(status) {
+    statusFilter(status = 'deleted') {
       const statusMap = {
         published: 'success',
         draft: 'info',
         deleted: 'danger'
       }
       return statusMap[status]
+    },
+    statusText(status) {
+      const item = statusOptions.find((item) => item.value === status) || {}
+      return item.label || '无'
     }
   },
   data() {
@@ -130,9 +142,7 @@ export default {
         limit: 20,
         title: undefined
       },
-      importanceOptions: [1, 2, 3],
-      sortOptions: [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }],
-      statusOptions: ['published', 'draft'],
+      statusOptions,
       showReviewer: false,
       dialogFormVisible: false,
       dialogStatus: '',
@@ -143,16 +153,18 @@ export default {
       temp: {
         id: undefined,
         content: '',
+        status: 'published',
         timestamp: new Date(),
         title: '',
         img_url: '',
         relate_id: '',
         isrelate: false // 是否关联文章
       },
-      dialogPvVisible: false,
       pvData: [],
       rules: {
-        title: [{ required: true, message: 'title is required', trigger: 'blur' }]
+        title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
+        status: [{ required: true, message: '请选择状态', trigger: 'change' }],
+        img_url: [{ required: true, message: '请上传banner图', trigger: 'change' }]
       },
       downloadLoading: false
     }
@@ -193,18 +205,17 @@ export default {
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          console.log(this.temp)
-          const params = {
-            title: this.temp.title,
-            img_url: this.temp.img_url,
-            content: this.temp.content
-          }
-          if (this.temp.relate_id) {
-            params.relate_id = this.temp
-          }
-          createBanner(params).then(() => {
-            params.create_at = new Date()
-            this.list.unshift(params)
+          // const params = {
+          //   title: this.temp.title,
+          //   img_url: this.temp.img_url,
+          //   content: this.temp.content
+          // }
+          // if (this.temp.relate_id) {
+          //   params.relate_id = this.temp
+          // }
+          createBanner(this.temp).then(() => {
+            this.temp.create_at = Date.now()
+            this.list.unshift(this.temp)
             this.dialogFormVisible = false
             this.$notify({
               title: 'Success',
@@ -228,11 +239,10 @@ export default {
     updateData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          const tempData = Object.assign({}, this.temp)
-          tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-          updateBanner(tempData).then(() => {
+          updateBanner(this.temp.id, this.temp).then(() => {
             const index = this.list.findIndex(v => v.id === this.temp.id)
-            this.list.splice(index, 1, this.temp)
+            const tempData = Object.assign({}, this.temp)
+            this.list.splice(index, 1, tempData)
             this.dialogFormVisible = false
             this.$notify({
               title: 'Success',
@@ -245,13 +255,15 @@ export default {
       })
     },
     handleDelete(row, index) {
-      this.$notify({
-        title: 'Success',
-        message: 'Delete Successfully',
-        type: 'success',
-        duration: 2000
+      deleteBanner(row.id).then(() => {
+        this.$notify({
+          title: 'Success',
+          message: 'Delete Successfully',
+          type: 'success',
+          duration: 2000
+        })
+        this.list.splice(index, 1)
       })
-      this.list.splice(index, 1)
     }
   }
 }

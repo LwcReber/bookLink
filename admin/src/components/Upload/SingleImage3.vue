@@ -19,7 +19,7 @@
           </span>
           <span
             class="el-upload-list__item-delete"
-            @click.stop="tempUrl = ''"
+            @click.stop="handleRemove"
           >
             <i class="el-icon-delete"></i>
           </span>
@@ -35,8 +35,18 @@
 
 <script>
 import { getToken } from '@/api/qiniu'
+import mixin from '@/mixin/emitter'
 export default {
   name: 'SingleImageUpload3',
+  mixins: [mixin],
+  inject: {
+    elForm: {
+      default: ''
+    },
+    elFormItem: {
+      default: ''
+    }
+  },
   props: {
     value: {
       type: String,
@@ -67,10 +77,13 @@ export default {
     },
     emitInput(val) {
       this.$emit('input', val)
+      this.dispatch('ElFormItem', 'el.form.change', [val])
+    },
+    handleRemove() {
+      this.tempUrl = ''
+      this.emitInput('')
     },
     handleImageSuccess(file, fileList) {
-      this.rmImage()
-      console.log(fileList)
       this.tempUrl = file.data
       this.emitInput(file.data)
     },

@@ -16,18 +16,19 @@ export default {
       var name = parent.$options.componentName
 
       while (parent && (!name || name !== componentName)) {
-        parent = parent.$parent;
+        parent = parent.$parent
 
         if (parent) {
-          name = parent.$options.componentName;
+          name = parent.$options.componentName
         }
       }
+      console.log(parent)
       if (parent) {
-        parent.$emit.apply(parent, [eventName].concat(params));
+        parent.$emit.apply(parent, [eventName].concat(params))
       }
     },
     broadcast(componentName, eventName, params) {
-      broadcast.call(this, componentName, eventName, params);
+      broadcast.call(this, componentName, eventName, params)
     }
   }
 }
