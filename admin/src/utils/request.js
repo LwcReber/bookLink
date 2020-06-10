@@ -71,14 +71,37 @@ service.interceptors.response.use(
       return res
     }
   },
-  error => {
-    console.log('err' + error) // for debug
-    Message({
-      message: error.msg,
-      type: 'error',
-      duration: 5 * 1000
-    })
-    return Promise.reject(error)
+  (error) => {
+    try {
+      const response = error.response
+
+      if (response) {
+        switch (error.response.status) {
+          case 401:
+            error.message = '认证无效或过期'
+            break
+            // 跳转
+          case 400:
+            error.message = '错误请求'
+            break
+          case 403:
+            error.message = '拒绝访问'
+            break
+          case 404:
+            error.message = '请求错误'
+            break
+          case 500:
+            error.message = '服务端出错'
+            break
+        }
+      } else {
+        error.message = '网络异常'
+      }
+      Message({ message: error.message, type: 'error' })
+      return Promise.reject(error)
+    } catch (err) {
+      return Promise.reject(err)
+    }
   }
 )
 

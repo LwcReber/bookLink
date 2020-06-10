@@ -6,7 +6,7 @@
     height="500px"
     initialEditType="wysiwyg"
     previewStyle="vertical"
-    @change="onEditorChange"
+    @blur="blur"
     />
 </template>
 
@@ -16,17 +16,24 @@ import '@toast-ui/editor/dist/toastui-editor.css'
 import defaultOpt from './default-options'
 import { Editor } from '@toast-ui/vue-editor'
 import '@toast-ui/editor/dist/i18n/zh-cn'
-// import mixin from '../../mixin/emitter'
 export default {
   components: {
     editor: Editor
   },
-  // mixins: [mixin],
   data () {
+    const self = this
     return {
       editorOptions: {
         hideModeSwitch: true,
-        ...defaultOpt
+        ...defaultOpt,
+        hooks: {
+          addImageBlobHook: function(file, callback) {
+            function callback_for_image_upload(img_url) {
+              callback(img_url, 'image')
+            }
+            self.uploadCallback(file, callback_for_image_upload);
+          }
+        }
       }
     }
   },
@@ -40,14 +47,24 @@ export default {
   },
   props: {
     value: {
-      type: String
+      type: String,
+      default: ''
+    },
+    uploadCallback: {
+      type: Function
     }
   },
   watch: {
-    value (newVal, old) {
-      if (newVal !== old && newVal !== this.getHtml()) {
-        this.$refs.toastuiEditor.invoke('setValue', newVal)
-        this.dispatch('ElFormItem', 'el.form.change', [newVal]);
+    value: {
+      immediate: true,
+      handler(newVal, old) {
+        this.$nextTick(() => {
+          console.log(newVal, old)
+          this.$refs.toastuiEditor.invoke('setHtml', newVal)
+          if (newVal !== old) {
+            this.dispatch('ElFormItem', 'el.form.change', [newVal]);
+          }
+        })
       }
     }
   },
@@ -55,6 +72,12 @@ export default {
     this.init()
   },
   methods: {
+    init () {
+      this.$refs.toastuiEditor.invoke('on', 'change', () => {
+        this.$emit('input', this.getHtml())
+        this.$emit('value', this.$refs.toastuiEditor.invoke('getValue'))
+      })
+    },
     dispatch(componentName, eventName, params) {
       var parent = this.$parent || this.$root;
       var name = parent.$options.componentName;
@@ -69,14 +92,8 @@ export default {
         parent.$emit.apply(parent, [eventName].concat(params));
       }
     },
-    onEditorChange (value) {
-      console.log(value)
-    },
-    init () {
-      this.$refs.toastuiEditor.invoke('on', 'change', () => {
-        this.$emit('input', this.getHtml())
-        this.$emit('value', this.$refs.toastuiEditor.invoke('getValue'))
-      })
+    blur () {      
+      this.dispatch('ElFormItem', 'el.form.change', ['']);
     },
     scroll() {
       this.$refs.toastuiEditor.invoke('scrollTop', 10);
@@ -91,7 +108,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-
-</style>

@@ -62,13 +62,13 @@ export default {
     }
   },
   watch: {
-    value(newVal) {
-      console.log('new')
-      this.$nextTick(() => {
-        if (newVal) {
+    value: {
+      immediate: true,
+      handler(newVal) {
+        this.$nextTick(() => {
           this.tempUrl = newVal
-        }
-      })
+        })
+      }
     }
   },
   methods: {

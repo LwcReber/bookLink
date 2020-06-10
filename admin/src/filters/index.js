@@ -1,7 +1,12 @@
+import { format } from 'date-fns'
 // import parseTime, formatTime and set to filter
 export { parseTime, formatTime } from '@/utils'
 
-export { format } from 'date-fns'
+export function formatDate(time, option = 'yyyy/MM/dd HH:mm') {
+  console.log(time)
+  const time2 = new Date(time)
+  return format(time2, option)
+}
 /**
  * Show plural label if time is plural number
  * @param {number} time

@@ -26,8 +26,7 @@
       </el-table-column>
       <el-table-column label="Date" width="150px" align="center">
         <template slot-scope="{row}">
-          <!-- <span>{{row.created_at }}</span> -->
-          <span>{{ new Date(row.created_at) | format('yyyy/MM/dd HH:mm') }}</span>
+          <span>{{ row.created_at | formatDate }}</span>
         </template>
       </el-table-column>
       <el-table-column label="Title" min-width="150px">
@@ -63,7 +62,7 @@
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
 
     <el-dialog width="800px" :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="100px">
+      <el-form :validate-on-rule-change="false" ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="100px">
         <el-form-item label="Title" prop="title">
           <el-input v-model="temp.title" />
         </el-form-item>
@@ -85,11 +84,11 @@
             inactive-text="自定义内容"
           />
         </el-form-item>
-        <el-form-item :rules="temp.isrelate ? { required: true, message: '请输入文章id', trigger: 'blur' } : {}" v-show="temp.isrelate" label="关联文章" prop="relate_id">
-          <el-input v-model="temp.relate_id" placeholder="文章id" />
+        <el-form-item :rules="temp.isrelate ? { type: 'number', required: true, message: '请输入文章id', trigger: 'blur' } : {}" v-if="temp.isrelate" label="关联文章" prop="relate_id">
+          <el-input type="number" v-model="temp.relate_id" placeholder="文章id" />
         </el-form-item>
-        <el-form-item :rules="!temp.isrelate ? { required: true, message: '请输入详情', trigger: 'change' } : {}" v-show="!temp.isrelate" label="详情" prop="content">
-          <markdown-editor v-model="temp.content" class="markdown" />
+        <el-form-item :rules="!temp.isrelate ? { required: true, message: '请输入详情', trigger: 'change' } : {}" v-else label="详情" prop="content">
+          <markdown-editor :upload-callback="uploadImg" v-model="temp.content" class="markdown" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -106,6 +105,7 @@
 
 <script>
 import { fetchList, createBanner, updateBanner, deleteBanner } from '@/api/banner'
+import { upload } from '@/api/user'
 import { Switch } from 'element-ui'
 import waves from '@/directive/waves' // waves directive
 import Upload from '@/components/Upload/SingleImage3'
@@ -124,7 +124,8 @@ export default {
         draft: 'info',
         deleted: 'danger'
       }
-      return statusMap[status]
+      console.log(status)
+      return statusMap[status] || statusMap.deleted
     },
     statusText(status) {
       const item = statusOptions.find((item) => item.value === status) || {}
@@ -153,6 +154,7 @@ export default {
       temp: {
         id: undefined,
         content: '',
+        created_at: new Date(),
         status: 'published',
         timestamp: new Date(),
         title: '',
@@ -199,23 +201,17 @@ export default {
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
       this.$nextTick(() => {
+        this.temp = Object.assign({}, this.$options.data().temp)
         this.$refs['dataForm'].resetFields()
       })
     },
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          // const params = {
-          //   title: this.temp.title,
-          //   img_url: this.temp.img_url,
-          //   content: this.temp.content
-          // }
-          // if (this.temp.relate_id) {
-          //   params.relate_id = this.temp
-          // }
-          createBanner(this.temp).then(() => {
-            this.temp.create_at = Date.now()
-            this.list.unshift(this.temp)
+          createBanner(this.temp).then(({ data }) => {
+            this.temp.created_at = new Date()
+            this.temp.id = data.id
+            this.list.push(this.temp)
             this.dialogFormVisible = false
             this.$notify({
               title: 'Success',
@@ -263,6 +259,13 @@ export default {
           duration: 2000
         })
         this.list.splice(index, 1)
+      })
+    },
+    uploadImg(file, cb) {
+      console.log(cb)
+      upload(file).then((res) => {
+        console.log(res.data)
+        cb(res.data)
       })
     }
   }
