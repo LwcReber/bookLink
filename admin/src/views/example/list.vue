@@ -76,7 +76,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
+      fetchList({ pageIndex: this.listQuery.page, pageSize: this.listQuery.limit }).then(response => {
         this.list = response.data.items
         this.total = response.data.total
         this.listLoading = false

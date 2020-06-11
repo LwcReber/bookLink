@@ -124,7 +124,6 @@ export default {
         draft: 'info',
         deleted: 'danger'
       }
-      console.log(status)
       return statusMap[status] || statusMap.deleted
     },
     statusText(status) {
@@ -178,7 +177,6 @@ export default {
     getList() {
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
-        console.log(response)
         const data = response.data
         this.list = data.list
         this.total = data.total
@@ -262,9 +260,7 @@ export default {
       })
     },
     uploadImg(file, cb) {
-      console.log(cb)
       upload(file).then((res) => {
-        console.log(res.data)
         cb(res.data)
       })
     }
