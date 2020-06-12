@@ -23,6 +23,7 @@ class ArticleController extends Controller {
   async list() {  
     const ctx = this.ctx;
     const body = ctx.request.body
+
     let where = {}
     let query = {}
     let size = toInt(body.pageSize)
@@ -30,8 +31,18 @@ class ArticleController extends Controller {
     query = { limit: size, offset };
     body.create_id && (where.create_id = body.create_id)
     body.title && (where.title = {[Op.like]: '%' + body.title.trim() + '%'}) // 标题模糊搜索
-    query.where = where || {}
+    const whereKeys = Object.keys(where);
+    if (whereKeys.length > 0) {
+      query.where = where
+    }
+    console.log(query, '----------------')
+
     const data = await ctx.model.Article.findAndCountAll(query);
+    data.rows.map((item) => {
+      if (item.create_by) {
+        item.create_by = JSON.parse(item.create_by) || {}
+      }
+    });
     const res = { list: data.rows, total: data.count }
     ctx.helper.success({ ctx, res })
   }
@@ -67,8 +78,7 @@ class ArticleController extends Controller {
     const { ctx, service } = this
     let body = ctx.request.body
     // 如果参数校验未通过，将会抛出一个 status = 422 的异常
-    ctx.validate(ctx.rule.createArticle, body)
-
+    ctx.validate(ctx.rule.createArticle, body)    
     const id = await service.article.create(body);
     ctx.helper.success({ ctx, res: { id } })
 

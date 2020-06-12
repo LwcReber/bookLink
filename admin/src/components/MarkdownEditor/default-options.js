@@ -2,6 +2,7 @@
 export default {
   minHeight: '200px',
   previewStyle: 'vertical',
+  language: 'zh-CN',
   useCommandShortcut: true,
   useDefaultHTMLSanitizer: true,
   usageStatistics: false,
@@ -21,7 +22,6 @@ export default {
     'indent',
     'outdent',
     'divider',
-    'table',
     'image',
     'link',
     'divider',

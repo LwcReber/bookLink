@@ -87,7 +87,7 @@
         <el-form-item :rules="temp.isrelate ? { type: 'number', required: true, message: '请输入文章id', trigger: 'blur' } : {}" v-if="temp.isrelate" label="关联文章" prop="relate_id">
           <el-input type="number" v-model="temp.relate_id" placeholder="文章id" />
         </el-form-item>
-        <el-form-item :rules="!temp.isrelate ? { required: true, message: '请输入详情', trigger: 'change' } : {}" v-else label="详情" prop="content">
+        <el-form-item :rules="!temp.isrelate ? { required: true, message: '请输入详情', trigger: 'change' } : {}" label="详情" prop="content">
           <markdown-editor :upload-callback="uploadImg" v-model="temp.content" class="markdown" />
         </el-form-item>
       </el-form>
@@ -111,7 +111,7 @@ import waves from '@/directive/waves' // waves directive
 import Upload from '@/components/Upload/SingleImage3'
 
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-import MarkdownEditor from '../../../../components/MarkdownEditor'
+import MarkdownEditor from '@/components/MarkdownEditor'
 const statusOptions = [{ label: '上架', value: 'published' }, { label: '下架', value: 'draft' }]
 export default {
   name: 'ComplexTable',

@@ -1,123 +1,113 @@
 <template>
-  <div :id="id" />
+  <editor
+    ref="toastuiEditor"
+    :initial-value="value"
+    :options="editorOptions"
+    height="500px"
+    initial-edit-type="wysiwyg"
+    preview-style="vertical"
+    @blur="blur"
+  />
 </template>
 
 <script>
-// deps for editor
-import 'codemirror/lib/codemirror.css' // codemirror
-import 'tui-editor/dist/tui-editor.css' // editor ui
-import 'tui-editor/dist/tui-editor-contents.css' // editor content
-
-import Editor from 'tui-editor'
-import defaultOptions from './default-options'
-
+import 'codemirror/lib/codemirror.css'
+import '@toast-ui/editor/dist/toastui-editor.css'
+import defaultOpt from './default-options'
+import { Editor } from '@toast-ui/vue-editor'
+import '@toast-ui/editor/dist/i18n/zh-cn'
 export default {
-  name: 'MarkdownEditor',
+  components: {
+    editor: Editor
+  },
   props: {
     value: {
       type: String,
       default: ''
     },
-    id: {
-      type: String,
-      required: false,
-      default() {
-        return 'markdown-editor-' + +new Date() + ((Math.random() * 1000).toFixed(0) + '')
+    uploadCallback: {
+      type: Function,
+      require: false,
+      default: () => {
+
       }
-    },
-    options: {
-      type: Object,
-      default() {
-        return defaultOptions
-      }
-    },
-    mode: {
-      type: String,
-      default: 'markdown'
-    },
-    height: {
-      type: String,
-      required: false,
-      default: '300px'
-    },
-    language: {
-      type: String,
-      required: false,
-      default: 'zh-CN' // https://github.com/nhnent/tui.editor/tree/master/src/js/langs
     }
   },
   data() {
+    const self = this
+    const addImageBlobHook = self.uploadCallback ? {
+      addImageBlobHook: function(file, callback) {
+        function callback_for_image_upload(img_url) {
+          callback(img_url, 'image')
+        }
+        self.uploadCallback(file, callback_for_image_upload)
+      }
+    } : {}
     return {
-      editor: null
+      editorOptions: {
+        hideModeSwitch: true,
+        ...defaultOpt,
+        hooks: {
+          ...addImageBlobHook
+        }
+      }
     }
   },
-  computed: {
-    editorOptions() {
-      const options = Object.assign({}, defaultOptions, this.options)
-      options.initialEditType = this.mode
-      options.height = this.height
-      options.language = this.language
-      return options
+  inject: {
+    elForm: {
+      default: ''
+    },
+    elFormItem: {
+      default: ''
     }
   },
   watch: {
-    value(newValue, preValue) {
-      if (newValue !== preValue && newValue !== this.editor.getValue()) {
-        this.editor.setValue(newValue)
-      }
-    },
-    language(val) {
-      this.destroyEditor()
-      this.initEditor()
-    },
-    height(newValue) {
-      this.editor.height(newValue)
-    },
-    mode(newValue) {
-      this.editor.changeMode(newValue)
+    value(newVal, old) {
+      this.$nextTick(() => {
+        this.$refs.toastuiEditor.invoke('setHtml', newVal)
+        if (newVal !== old) {
+          this.dispatch('ElFormItem', 'el.form.change', [newVal])
+        }
+      })
     }
   },
   mounted() {
-    this.initEditor()
-  },
-  destroyed() {
-    this.destroyEditor()
+    this.init()
   },
   methods: {
-    initEditor() {
-      this.editor = new Editor({
-        el: document.getElementById(this.id),
-        ...this.editorOptions
+    init() {
+      this.$refs.toastuiEditor.invoke('on', 'change', () => {
+        this.$emit('input', this.getHtml())
+        this.$emit('value', this.$refs.toastuiEditor.invoke('getValue'))
       })
-      if (this.value) {
-        this.editor.setValue(this.value)
+    },
+    dispatch(componentName, eventName, params) {
+      var parent = this.$parent || this.$root
+      var name = parent.$options.componentName
+      while (parent && (!name || name !== componentName)) {
+        parent = parent.$parent
+
+        if (parent) {
+          name = parent.$options.componentName
+        }
       }
-      this.editor.on('change', () => {
-        this.$emit('input', this.editor.getValue())
-      })
+      if (parent) {
+        parent.$emit.apply(parent, [eventName].concat(params))
+      }
     },
-    destroyEditor() {
-      if (!this.editor) return
-      this.editor.off('change')
-      this.editor.remove()
+    blur() {
+      this.dispatch('ElFormItem', 'el.form.change', [''])
     },
-    setValue(value) {
-      this.editor.setValue(value)
+    scroll() {
+      this.$refs.toastuiEditor.invoke('scrollTop', 10)
     },
-    getValue() {
-      return this.editor.getValue()
-    },
-    setHtml(value) {
-      this.editor.setHtml(value)
+    moveTop() {
+      this.$refs.toastuiEditor.invoke('moveCursorToStart')
     },
     getHtml() {
-      return this.editor.getHtml()
+      const html = this.$refs.toastuiEditor.invoke('getHtml')
+      return html
     }
   }
 }
 </script>
-<style>
-  .te-preview {
-    width: 100% !important;
-  }
-</style>

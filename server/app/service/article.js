@@ -10,9 +10,10 @@ class ArticleService extends Service {
       const decode = ctx.helper.tokenDecode({ctx, token})
       const user = await ctx.model.User.findOne({
         where: {
-          name: decode.name
+          id: decode.id
         }
       });
+      
       if (user) {
         let { title, content } = data;
         const { id, name, created_at, avatar } = user
@@ -22,6 +23,7 @@ class ArticleService extends Service {
           create_id: user.id, // 创建者id
           create_by: JSON.stringify({ id, name, created_at, avatar: avatar || 'http://img5.imgtn.bdimg.com/it/u=3392663359,4194879068&fm=26&gp=0.jpg' })
         }
+        console.log(article)
         const narticle = await ctx.model.Article.create(article);
         return narticle.id;
       }

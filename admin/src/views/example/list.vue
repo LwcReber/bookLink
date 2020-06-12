@@ -1,21 +1,21 @@
 <template>
   <div class="app-container">
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
-      <el-table-column align="center" label="ID" width="80">
+      <el-table-column align="center" label="id" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
 
       <el-table-column width="180px" align="center" label="Date">
-        <template slot-scope="scope">
-          <span>{{ scope.row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+        <template slot-scope="{row}">
+          <span>{{ row.created_at | formatDate }}</span>
         </template>
       </el-table-column>
 
       <el-table-column width="120px" align="center" label="作者">
-        <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
+        <template slot-scope="{row}">
+          <span>{{ row.create_by.name }}</span>
         </template>
       </el-table-column>
 
@@ -65,7 +65,7 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
-        page: 1,
+        page: 0,
         limit: 20
       }
     }
@@ -77,7 +77,7 @@ export default {
     getList() {
       this.listLoading = true
       fetchList({ pageIndex: this.listQuery.page, pageSize: this.listQuery.limit }).then(response => {
-        this.list = response.data.items
+        this.list = response.data.list
         this.total = response.data.total
         this.listLoading = false
       })

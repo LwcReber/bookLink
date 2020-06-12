@@ -23,7 +23,7 @@
         </el-row>
 
         <el-form-item prop="content" style="margin-bottom: 30px;">
-          <markdown-editor v-model="postForm.content" class="markdown" />
+          <markdown-editor :upload-callback="uploadImg" v-model="postForm.content" class="markdown" />
         </el-form-item>
 
       </div>
@@ -32,27 +32,12 @@
 </template>
 
 <script>
-import MarkdownEditor from '../../../../../components/MarkdownEditor'
+import MarkdownEditor from '@/components/MarkdownEditor'
+import { upload } from '@/api/user'
 
 import MDinput from '@/components/MDinput'
 import Sticky from '@/components/Sticky' // 粘性header组件
-import { validURL } from '@/utils/validate'
 import { createArticle, fetchArticle } from '@/api/article'
-import { searchUser } from '@/api/remote-search'
-
-const defaultForm = {
-  status: 'draft',
-  title: '', // 文章题目
-  content: '', // 文章内容
-  content_short: '', // 文章摘要
-  source_uri: '', // 文章外链
-  image_uri: '', // 文章图片
-  display_time: undefined, // 前台展示时间
-  id: undefined,
-  platforms: ['a-platform'],
-  comment_disabled: false,
-  importance: 0
-}
 
 export default {
   name: 'ArticleDetail',
@@ -66,58 +51,25 @@ export default {
   data() {
     const validateRequire = (rule, value, callback) => {
       if (value === '') {
-        this.$message({
-          message: rule.field + '为必传项',
-          type: 'error'
-        })
         callback(new Error(rule.field + '为必传项'))
       } else {
         callback()
       }
     }
-    const validateSourceUri = (rule, value, callback) => {
-      if (value) {
-        if (validURL(value)) {
-          callback()
-        } else {
-          this.$message({
-            message: '外链url填写不正确',
-            type: 'error'
-          })
-          callback(new Error('外链url填写不正确'))
-        }
-      } else {
-        callback()
-      }
-    }
     return {
-      postForm: Object.assign({}, defaultForm),
+      postForm: {
+        title: '', // 文章题目
+        content: '', // 文章内容
+        id: undefined,
+        status: 'draft'
+      },
       loading: false,
       userListOptions: [],
       rules: {
-        image_uri: [{ validator: validateRequire }],
         title: [{ validator: validateRequire }],
-        content: [{ validator: validateRequire }],
-        source_uri: [{ validator: validateSourceUri, trigger: 'blur' }]
+        content: [{ required: true, message: '请输入内容', trigger: 'change' }]
       },
       tempRoute: {}
-    }
-  },
-  computed: {
-    contentShortLength() {
-      return this.postForm.content_short.length
-    },
-    displayTime: {
-      // set and get is useful when the data
-      // returned by the back end api is different from the front end
-      // back end return => "2013-06-25 06:59:25"
-      // front end need timestamp => 1372114765000
-      get() {
-        return (+new Date(this.postForm.display_time))
-      },
-      set(val) {
-        this.postForm.display_time = new Date(val)
-      }
     }
   },
   created() {
@@ -134,12 +86,12 @@ export default {
   methods: {
     fetchData(id) {
       fetchArticle(id).then(response => {
-        this.postForm = response.data
+        const data = response.data
 
         // just for test
-        this.postForm.title += `   Article Id:${this.postForm.id}`
-        this.postForm.content_short += `   Article Id:${this.postForm.id}`
-
+        this.postForm.title = data.title
+        this.postForm.id = data.id
+        this.postForm.content = data.content
         // set tagsview title
         this.setTagsViewTitle()
 
@@ -157,6 +109,11 @@ export default {
     setPageTitle() {
       const title = 'Edit Article'
       document.title = `${title} - ${this.postForm.id}`
+    },
+    uploadImg(file, cb) {
+      upload(file).then((res) => {
+        cb(res.data)
+      })
     },
     submitForm() {
       console.log(this.postForm)
@@ -177,28 +134,6 @@ export default {
           console.log('error submit!!')
           return false
         }
-      })
-    },
-    draftForm() {
-      if (this.postForm.content.length === 0 || this.postForm.title.length === 0) {
-        this.$message({
-          message: '请填写必要的标题和内容',
-          type: 'warning'
-        })
-        return
-      }
-      this.$message({
-        message: '保存成功',
-        type: 'success',
-        showClose: true,
-        duration: 1000
-      })
-      this.postForm.status = 'draft'
-    },
-    getRemoteUserList(query) {
-      searchUser(query).then(response => {
-        if (!response.data.items) return
-        this.userListOptions = response.data.items.map(v => v.name)
       })
     }
   }
