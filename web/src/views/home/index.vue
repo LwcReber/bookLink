@@ -1,9 +1,9 @@
 <template>
   <main class="page home">
     <!-- banner -->
-    <Carousel height="250px" trigger="click">
+    <Carousel height="100%" class="banner" trigger="click">
       <CarouselItem :title="item.title" class="banner-item" @click.native="bannerDetail(item)" v-for="item in banners" :key="item.id">
-        <h4>{{item.title}}</h4>
+        <h4 class="title">{{item.title}}</h4>
         <img class="banner-img" :src="item.img_url" alt="">
       </CarouselItem>
     </Carousel>
@@ -12,7 +12,7 @@
     </Backtop>
 
     <!-- 文章列表展示 -->
-    <ListView :noMore="noMore" @load="loadList" :list="list"/>
+    <ListView :showNoMore="page > 1" :noMore="noMore" @load="loadList" :list="list"/>
   </main>
 </template>
 
@@ -28,6 +28,7 @@ export default {
       list: [],
       banners: [],
       noMore: false,
+      showNoMore: true,
       page: 0,
       pageSize: 10,
       total: 0
@@ -35,7 +36,7 @@ export default {
   },
   created () {
     getBanners().then(data => {
-      this.banners = data.data.list
+      this.banners = data.data
     })
     this.loadList()
   },
@@ -50,13 +51,13 @@ export default {
     },
     loadList (closeLoading) {
       getArticles({ pageIndex: this.page, pageSize: this.pageSize }).then(({ data }) => {
-        this.page++
         this.list = [...this.list, ...data.list]
         this.total = data.total
         if (this.total <= this.list.length) {
           this.noMore = true
         }
         closeLoading && closeLoading()
+        this.page++
       })
     }
   }
@@ -69,11 +70,25 @@ export default {
   }
   .banner-item {
     cursor: pointer;
+    .title {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+    }
   }
   .banner-img {
     width: 100%;
     height: 100%;
   }
+  .banner {
+    height: 300px;
+  }
+  @media screen and (min-width: 1600px) {
+    .banner {
+      height: 350px;
+    }
+  }
+
 </style>
 <style lang="scss">
   .el-carousel__item:nth-child(2n) {

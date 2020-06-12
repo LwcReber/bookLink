@@ -3,12 +3,15 @@
     <slot></slot>
     <span @click="toDetail" class="title">{{data.title}}</span>
     <div class="content" v-html="replace(data.content)"></div>
+    <UserInfo :data="data"/>
   </div>
 </template>
 
 <script>
+import UserInfo from './UserInfo'
 export default {
   name: 'Item',
+  components: { UserInfo },
   props: {
     data: {
       type: Object
@@ -28,6 +31,7 @@ export default {
 <style lang="scss" scoped>
   .item {
     border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
     .title {
       font-size: 18px;
       margin: 10px 0 0;
@@ -40,7 +44,7 @@ export default {
       }
     }
     .content {
-      margin-bottom: 10px;
+      font-size: 14px;
       text-overflow: -o-ellipsis-lastline;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -50,4 +54,5 @@ export default {
       -webkit-box-orient: vertical;
     }
   }
+
 </style>

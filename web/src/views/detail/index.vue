@@ -2,9 +2,8 @@
   <div class="detail">
     <div class="page container">
       <h3 class="title">{{title}}</h3>
-      <div class="info">
-        <span>作者: {{user}} </span>
-        <span> 时间： {{created}}</span>
+      <div class="info" flex="cross:center">
+        <UserInfo :data="data"/>
       </div>
       <div class="content" v-html="content"></div>
     </div>
@@ -13,8 +12,9 @@
 
 <script>
 import { articleDetail } from '@/api/article'
-
+import UserInfo from '@/components/UserInfo'
 export default {
+  components: { UserInfo },
   computed: {
     id () {
       return this.$route.params.id
@@ -25,17 +25,14 @@ export default {
   },
   data () {
     return {
-      content: '',
-      author: '',
-      created: '',
-      user: ''
+      data: {},
+      content: ''
     }
   },
   created () {
     articleDetail(this.id).then(({ data }) => {
-      this.user = data.create_by.name
       this.content = data.content
-      this.created = data.created_at
+      this.data = data
     })
   }
 }
@@ -60,6 +57,12 @@ export default {
  }
  .info {
    font-size: 14px;
+    .author {
+      margin-right: 20px;
+    }
+   .time {
+      margin-left: 20px;
+   }
  }
  .content {
    font-size: 16px;

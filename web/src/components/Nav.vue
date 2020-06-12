@@ -9,8 +9,9 @@
       </div>
       <div flex="cross:center" class="right">
         <Dropdown placement="bottom" v-if="isLogin">
-          <view-avatar :text="userName" class="user-avatar" quickWidth="40px" borderRadius="50%" src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3238317745,514710292&fm=26&gp=0.jpg"></view-avatar>
+          <view-avatar :text="userName" class="user-avatar" quickWidth="40px" borderRadius="50%" :src="avatar"></view-avatar>
           <DropdownMenu slot="dropdown">
+            <DropdownItem @click.native="toUserHome">主页</DropdownItem>
             <DropdownItem @click.native="$store.dispatch('user/logout')">退出</DropdownItem>
           </DropdownMenu>
         </Dropdown>
@@ -23,10 +24,9 @@
 
 <script>
 import { Input, Dropdown, DropdownItem, DropdownMenu } from 'element-ui'
-import ViewAvatar from 'view-avatar'
 import { mapState } from 'vuex'
 export default {
-  components: { 'el-input': Input, ViewAvatar, Dropdown, DropdownItem, DropdownMenu },
+  components: { 'el-input': Input, Dropdown, DropdownItem, DropdownMenu },
   data () {
     return {
       search: '',
@@ -43,6 +43,9 @@ export default {
   methods: {
     toHome (path) {
       this.search = ''
+    },
+    toUserHome () {
+      this.$router.push('userDetail')
     },
     searchContent () {
       this.$router.push({ path: '/search', query: { query: this.search.trim() } })
@@ -64,7 +67,7 @@ export default {
   box-shadow: 0 0 8px 0 #aaa;
   .content {
     height: 50px;
-    max-width: 1000px;
+    max-width: $screenMaxWidth;
     margin: auto
   }
   .home {
@@ -76,7 +79,7 @@ export default {
     cursor: pointer;
   }
   .write {
-    margin-left: 10px;
+    margin-left: 20px;
     cursor: pointer;
   }
 }
@@ -110,5 +113,9 @@ export default {
   height: 40px;
   cursor: pointer;
 }
-
+@media screen and (min-width: 1600px) {
+  .nav .content {
+    max-width: 1400px;
+  }
+}
 </style>

@@ -84,10 +84,10 @@
             inactive-text="自定义内容"
           />
         </el-form-item>
-        <el-form-item :rules="temp.isrelate ? { type: 'number', required: true, message: '请输入文章id', trigger: 'blur' } : {}" v-if="temp.isrelate" label="关联文章" prop="relate_id">
+        <el-form-item :rules="temp.isrelate ? { required: true, message: '请输入文章id', trigger: 'blur' } : {}" v-if="temp.isrelate" label="关联文章" prop="relate_id">
           <el-input type="number" v-model="temp.relate_id" placeholder="文章id" />
         </el-form-item>
-        <el-form-item :rules="!temp.isrelate ? { required: true, message: '请输入详情', trigger: 'change' } : {}" label="详情" prop="content">
+        <el-form-item v-else :rules="!temp.isrelate ? { required: true, message: '请输入详情', trigger: 'change' } : {}" label="详情" prop="content">
           <markdown-editor :upload-callback="uploadImg" v-model="temp.content" class="markdown" />
         </el-form-item>
       </el-form>

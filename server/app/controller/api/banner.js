@@ -25,6 +25,17 @@ class BannerController extends Controller {
     ctx.helper.success({ ctx, res })
   }
   /**
+   * @summary web端首页banner列表
+   * @router get /api/v1/banner/home
+   * @response 200 baseResponse
+   */
+  async banner() {
+    const ctx = this.ctx;
+    // web端首页，只查找已上架的banner
+    const res = await ctx.model.Banner.findAll({ where: { status: 'published' } });
+    ctx.helper.success({ ctx, res })
+  }
+  /**
    * @summary banner详情
    * @description banner
    * @router get /api/v1/banner/{id}
@@ -77,9 +88,9 @@ class BannerController extends Controller {
       return;
     }
 
-    const { title, content, img_url, relate_id } = ctx.request.body;
-    await banner.update({ title, content, img_url, relate_id });
-    ctx.helper.success({ ctx, res: banner })
+    const { title, content, img_url, relate_id, status } = ctx.request.body;
+    await banner.update({ title, status, content, img_url, relate_id });
+    ctx.helper.success({ ctx })
   }
   /**
    * @summary 删除banner

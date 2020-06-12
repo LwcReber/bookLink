@@ -1,13 +1,13 @@
 <template>
-  <editor 
+  <editor
     ref="toastuiEditor"
-    :initialValue="value"
+    :initial-value="value"
     :options="editorOptions"
     height="500px"
-    initialEditType="wysiwyg"
-    previewStyle="vertical"
+    initial-edit-type="wysiwyg"
+    preview-style="vertical"
     @blur="blur"
-    />
+  />
 </template>
 
 <script>
@@ -20,19 +20,35 @@ export default {
   components: {
     editor: Editor
   },
-  data () {
+  props: {
+    value: {
+      type: String,
+      default: ''
+    },
+    uploadCallback: {
+      type: Function,
+      require: false,
+      default: () => {
+
+      }
+    }
+  },
+  data() {
     const self = this
+    const addImageBlobHook = self.uploadCallback ? {
+      addImageBlobHook: function(file, callback) {
+        function callback_for_image_upload(img_url) {
+          callback(img_url, 'image')
+        }
+        self.uploadCallback(file, callback_for_image_upload)
+      }
+    } : {}
     return {
       editorOptions: {
         hideModeSwitch: true,
         ...defaultOpt,
         hooks: {
-          addImageBlobHook: function(file, callback) {
-            function callback_for_image_upload(img_url) {
-              callback(img_url, 'image')
-            }
-            self.uploadCallback(file, callback_for_image_upload);
-          }
+          ...addImageBlobHook
         }
       }
     }
@@ -45,64 +61,51 @@ export default {
       default: ''
     }
   },
-  props: {
-    value: {
-      type: String,
-      default: ''
-    },
-    uploadCallback: {
-      type: Function
-    }
-  },
   watch: {
-    value: {
-      immediate: true,
-      handler(newVal, old) {
-        this.$nextTick(() => {
-          console.log(newVal, old)
-          this.$refs.toastuiEditor.invoke('setHtml', newVal)
-          if (newVal !== old) {
-            this.dispatch('ElFormItem', 'el.form.change', [newVal]);
-          }
-        })
-      }
+    value(newVal, old) {
+      this.$nextTick(() => {
+        this.$refs.toastuiEditor.invoke('setHtml', newVal)
+        if (newVal !== old) {
+          this.dispatch('ElFormItem', 'el.form.change', [newVal])
+        }
+      })
     }
   },
-  mounted () {
+  mounted() {
     this.init()
   },
   methods: {
-    init () {
+    init() {
       this.$refs.toastuiEditor.invoke('on', 'change', () => {
         this.$emit('input', this.getHtml())
         this.$emit('value', this.$refs.toastuiEditor.invoke('getValue'))
       })
     },
     dispatch(componentName, eventName, params) {
-      var parent = this.$parent || this.$root;
-      var name = parent.$options.componentName;
+      var parent = this.$parent || this.$root
+      var name = parent.$options.componentName
       while (parent && (!name || name !== componentName)) {
-        parent = parent.$parent;
+        parent = parent.$parent
 
         if (parent) {
-          name = parent.$options.componentName;
+          name = parent.$options.componentName
         }
       }
       if (parent) {
-        parent.$emit.apply(parent, [eventName].concat(params));
+        parent.$emit.apply(parent, [eventName].concat(params))
       }
     },
-    blur () {      
-      this.dispatch('ElFormItem', 'el.form.change', ['']);
+    blur() {
+      this.dispatch('ElFormItem', 'el.form.change', [''])
     },
     scroll() {
-      this.$refs.toastuiEditor.invoke('scrollTop', 10);
+      this.$refs.toastuiEditor.invoke('scrollTop', 10)
     },
     moveTop() {
-      this.$refs.toastuiEditor.invoke('moveCursorToStart');
+      this.$refs.toastuiEditor.invoke('moveCursorToStart')
     },
     getHtml() {
-      let html = this.$refs.toastuiEditor.invoke('getHtml');
+      const html = this.$refs.toastuiEditor.invoke('getHtml')
       return html
     }
   }

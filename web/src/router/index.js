@@ -14,6 +14,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "home" */ '../views/home')
       },
       {
+        path: '/userDetail',
+        meta: { keepAlive: true },
+        component: () => import(/* webpackChunkName: "search" */ '../views/user-detail')
+      },
+      {
         path: '/search',
         name: 'search',
         component: () => import(/* webpackChunkName: "search" */ '../views/search')

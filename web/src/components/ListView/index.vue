@@ -10,7 +10,7 @@
       <div class="infinite-list-bottom">
         <Button class="btn-load" @click="loadMore" v-if="!loading && !noMore">加载更多</Button>
         <div v-if="!noMore" class="loading" element-loading-spinner="el-icon-loading" v-loading="loading"></div>
-        <p class="no-more" v-if="noMore">没有更多了</p>
+        <p class="no-more" v-if="showNoMore && noMore">没有更多了</p>
       </div>
     </div>
     <p v-else class="no-data">
@@ -21,7 +21,7 @@
 
 <script>
 import { Button } from 'element-ui'
-import Item from './Item'
+import Item from '../Item'
 export default {
   components: { Item, Button },
   data () {
@@ -33,6 +33,7 @@ export default {
     list: {
       type: Array
     },
+    showNoMore: { type: Boolean, default: true },
     noMore: { type: Boolean, default: false }
   },
   methods: {
@@ -72,5 +73,10 @@ export default {
     width: 100%;
     max-width: 600px;
     border-radius: 20px;
+  }
+  @media screen and (min-width: 1600px) {
+    .infinite-list-wrapper {
+      max-width: 800px;
+    }
   }
 </style>

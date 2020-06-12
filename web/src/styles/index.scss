@@ -3,8 +3,14 @@
 body {
   min-height: 400px;
 }
-
 .page {
-  max-width: 1000px;
+  max-width: $screenMaxWidth;
   margin: 0 auto;
+}
+
+@media screen and (min-width: 1600px) {
+  $screenMaxWidth: 1400px;
+  .page {
+    max-width: $screenMaxWidth;
+  }
 }

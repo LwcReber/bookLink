@@ -1,7 +1,7 @@
 import request from '@/http'
 
 export function getBanners () {
-  return request.get('/banner', {}).then(({ data }) => data)
+  return request.get('/banner/home', {}).then(({ data }) => data)
 }
 
 export function getBannerDetail (id) {

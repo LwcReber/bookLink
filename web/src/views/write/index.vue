@@ -3,8 +3,8 @@
     <div flex="main:justify">
       <el-input class="title" placeholder="请输入标题" v-model="title"></el-input>
       <div class="right" flex="main:right cross:center">
-        <Button @click="publish" type="primary" size="mini" class="publish">发布</Button>
-        <Button @click="$router.push('/')" type="primary" size="mini" class="to-home">回到首页</Button>
+        <Button @click="publish" type="success" class="publish">发布</Button>
+        <Button @click="$router.push('/')" plain type="primary" class="to-home">回到首页</Button>
       </div>
     </div>
     <markdown-editor v-model="content" class="markdown" />
