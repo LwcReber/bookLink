@@ -7,6 +7,7 @@
     initial-edit-type="wysiwyg"
     preview-style="vertical"
     @blur="blur"
+    @change="onEditorChange"
   />
 </template>
 
@@ -61,25 +62,13 @@ export default {
       default: ''
     }
   },
-  watch: {
-    value(newVal, old) {
-      this.$nextTick(() => {
-        this.$refs.toastuiEditor.invoke('setHtml', newVal)
-        if (newVal !== old) {
-          this.dispatch('ElFormItem', 'el.form.change', [newVal])
-        }
-      })
-    }
-  },
-  mounted() {
-    this.init()
-  },
   methods: {
-    init() {
-      this.$refs.toastuiEditor.invoke('on', 'change', () => {
-        this.$emit('input', this.getHtml())
-        this.$emit('value', this.$refs.toastuiEditor.invoke('getValue'))
-      })
+    onEditorChange() {
+      const html = this.getHtml()
+      this.$emit('input', html)
+      if (this.value !== html) {
+        this.dispatch('ElFormItem', 'el.form.change', [html])
+      }
     },
     dispatch(componentName, eventName, params) {
       var parent = this.$parent || this.$root
@@ -96,7 +85,7 @@ export default {
       }
     },
     blur() {
-      this.dispatch('ElFormItem', 'el.form.change', [''])
+      this.dispatch('ElFormItem', 'el.form.change', [this.value])
     },
     scroll() {
       this.$refs.toastuiEditor.invoke('scrollTop', 10)

@@ -3,7 +3,7 @@
     <slot></slot>
     <span @click="toDetail" class="title">{{data.title}}</span>
     <div class="content" v-html="replace(data.content)"></div>
-    <UserInfo :data="data"/>
+    <UserInfo class="user-info" :data="data"/>
   </div>
 </template>
 
@@ -53,6 +53,9 @@ export default {
       line-clamp: 2;
       -webkit-box-orient: vertical;
     }
+  }
+  .user-info {
+    margin-top: 10px;
   }
 
 </style>

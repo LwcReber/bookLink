@@ -129,4 +129,5 @@ export default {
   .list-view {
     max-width: 100%;
   }
+
 </style>
