@@ -72,19 +72,27 @@ class UserController extends Controller {
     ctx.helper.success({ ctx, res: userData })
 
   }
-
+  /**
+   * @summary 更新用户
+   * @description 创建用户
+   * @router post /api/v1/user/{id}
+   * @request path integer id  *query
+   * @request body updateUser *body
+   * @Bearer
+   * @response 200 baseResponse 创建成功
+   */
   async update() {
     const ctx = this.ctx;
     const id = toInt(ctx.params.id);
     const user = await ctx.model.User.findByPk(id);
     if (!user) {
-      ctx.status = 404;
+      ctx.helper.error({ ctx, msg: '无此用户' })
       return;
     }
 
-    const { name, age } = ctx.request.body;
-    await user.update({ name, age });
-    ctx.body = user;
+    const { avatar } = ctx.request.body;
+    await user.update({ avatar });
+    ctx.helper.success({ ctx })
   }
 
   async destroy() {

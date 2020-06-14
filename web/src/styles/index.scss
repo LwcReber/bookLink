@@ -1,11 +1,18 @@
 @import 'reset.scss';
 
+html, body {
+  min-height: 100%;
+  background: #f4f5f5;
+}
 body {
-  min-height: 400px;
+  height: 100%;
 }
 .page {
   max-width: $screenMaxWidth;
   margin: 0 auto;
+}
+.el-dropdown {
+  outline: none;
 }
 
 @media screen and (min-width: 1600px) {

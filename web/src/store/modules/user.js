@@ -16,9 +16,10 @@ export default {
       state.isLogin = val
     },
     setUserInfo (state, user) {
-      state.userName = user.name
-      state.userId = user.id
-      state.avatar = user.avatar
+      console.log('suer')
+      user.name && (state.userName = user.name)
+      user.id && (state.userId = user.id)
+      user.avatar && (state.avatar = user.avatar)
     }
   },
   actions: {

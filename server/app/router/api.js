@@ -15,7 +15,7 @@ module.exports = app => {
   apiV1Router.get('/user', jwt, user.index)
   // apiV1Router.get('/user/:id', user.show)
   apiV1Router.post('/user', user.create)
-  // apiV1Router.post('/user/:id', jwt, user.update)
+  apiV1Router.post('/user/:id', jwt, user.update)
   
   // banner
   apiV1Router.get('/banner', banner.index)
@@ -26,6 +26,7 @@ module.exports = app => {
   apiV1Router.delete('/banner/:id', jwt, banner.destroy)
 
   // article
+  apiV1Router.get('/article/list/:id', article.userList)
   apiV1Router.post('/article/list', article.list)
   apiV1Router.get('/article/:id', article.show)
   apiV1Router.post('/article', jwt, article.create)

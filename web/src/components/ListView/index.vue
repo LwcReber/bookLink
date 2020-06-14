@@ -62,6 +62,9 @@ export default {
     padding-top: 10px;
     padding-bottom: 10px;
   }
+  .no-data {
+    margin: 50px;
+  }
   .infinite-list-bottom {
     margin-top: 10px;
   }

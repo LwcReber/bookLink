@@ -12,7 +12,7 @@
     </Backtop>
 
     <!-- 文章列表展示 -->
-    <ListView :showNoMore="page > 1" :noMore="noMore" @load="loadList" :list="list"/>
+    <ListView class="list" :showNoMore="page > 1" :noMore="noMore" @load="loadList" :list="list"/>
   </main>
 </template>
 
@@ -66,6 +66,9 @@ export default {
 
 <style lang="scss" scoped>
   .home {
+    background: #fff;
+  }
+  .list {
     padding: 0 10px;
   }
   .banner-item {

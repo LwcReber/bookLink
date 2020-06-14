@@ -1,5 +1,5 @@
 <template>
-  <div class="page">
+  <div class="page container">
     <ListView :noMore="noMore" @load="loadList" :list="list"/>
   </div>
 </template>
@@ -52,5 +52,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+  .container {
+    background: #fff;
+    padding: 0 10px;
+  }
 </style>

@@ -9,7 +9,9 @@
       </div>
       <div flex="cross:center" class="right">
         <Dropdown placement="bottom" v-if="isLogin">
-          <view-avatar :text="userName" class="user-avatar" quickWidth="40px" borderRadius="50%" :src="avatar"></view-avatar>
+          <a href="/userDetail">
+            <view-avatar :text="userName" class="user-avatar" quickWidth="40px" borderRadius="50%" :src="avatar"></view-avatar>
+          </a>
           <DropdownMenu slot="dropdown">
             <DropdownItem @click.native="toUserHome">主页</DropdownItem>
             <DropdownItem @click.native="$store.dispatch('user/logout')">退出</DropdownItem>

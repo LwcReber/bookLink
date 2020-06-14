@@ -23,10 +23,10 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+  .main-container, .main {
+    height: 100%;
+  }
   .main {
     padding-top: 50px;
-  }
-  .main-container {
-    // padding: 0 10px;
   }
 </style>

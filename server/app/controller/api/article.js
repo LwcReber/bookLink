@@ -46,6 +46,31 @@ class ArticleController extends Controller {
     const res = { list: data.rows, total: data.count }
     ctx.helper.success({ ctx, res })
   }
+
+  /**
+   * @summary 某个用户文章列表
+   * @router get /api/v1/article/list/{id}
+   * @request path integer id  *path
+   * @request query integer pageIndex  *query
+   * @request query integer pageSize  *query
+   * @response 200 baseResponse 
+   */
+  async userList () {
+    const ctx = this.ctx;
+    const params = ctx.params
+    let where = { create_id: params.id }
+    let size = toInt(ctx.query.pageSize)
+    let offset = toInt(ctx.query.pageIndex) * size
+    const query = { limit: size, offset, where };
+    const data = await ctx.model.Article.findAndCountAll(query);
+    data.rows.map((item) => {
+      if (item.create_by) {
+        item.create_by = JSON.parse(item.create_by) || {}
+      }
+    });
+    const res = { list: data.rows, total: data.count }
+    ctx.helper.success({ ctx, res })
+  }
   /**
    * @summary 文章详情
    * @description 文章详情

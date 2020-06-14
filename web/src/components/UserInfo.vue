@@ -4,7 +4,7 @@
       <view-avatar quickWidth="40px" borderRadius="50%" :text="data.create_by.name" :src="data.create_by.avatar"></view-avatar>
       <span class="name">{{ data.create_by.name}}</span>
     </span>
-    <span class="time">
+    <span class="time" v-if="data.created_at">
       {{ data.created_at | formatDate }}
     </span>
   </div>
