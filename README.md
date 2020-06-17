@@ -1,6 +1,3 @@
----
-typora-copy-images-to: ./img/详情页.png
----
 
 # bookLink
 仿照简书部分功能的前后端、后台管理系统一体化的项目
@@ -22,34 +19,34 @@ admin: 后台管理系统
 
 登录注册
 
-![登录注册](https://github.com/LwcReber/bookLink/tree/master/img/登录注册.png)
+![登录注册](https://lwcreber.github.io/images/booklink/登录注册.png)
 
 首页
 
-![首页](https://github.com/LwcReber/bookLink/tree/master/img/首页.png)
+![首页](https://lwcreber.github.io/images/booklink/首页.png)
 
 文章详情
 
-![详情页](https://github.com/LwcReber/bookLink/tree/master/img/详情页.png)
+![详情页](https://lwcreber.github.io/images/booklink/文章详情.png)
 
 
 
 写文章
 
-![写文章页面](https://github.com/LwcReber/bookLink/tree/master/img/写文章页面.png)
+![写文章页面](https://lwcreber.github.io/images/booklink/写文章.png)
 
 个人中心
 
-![个人中心](https://github.com/LwcReber/bookLink/tree/master/img/个人中心.png)
+![个人中心](https://lwcreber.github.io/images/booklink/个人中心.png)
 
 
 
 ### 后台管理系统
 
-![后台](/https://github.com/LwcReber/bookLink/tree/master/img/后台.png)
+![后台](https://lwcreber.github.io/images/booklink/后台.png)
 
 
 
 ### 接口swagger文档
 
-![swagger文档](https://github.com/LwcReber/bookLink/tree/master/img/swagger文档.png)
+![swagger文档](https://lwcreber.github.io/images/booklink/swagger文档.png)
