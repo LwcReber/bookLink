@@ -13,6 +13,8 @@ admin: 后台管理系统
 
 先在根目录`npm i`， 然后在根目录运行`npm run dev`。三个端开发环境就会同时运行
 
+### 项目脑图
+![脑图](https://lwcreber.github.io/images/booklink/脑图.png)
 
 
 ### 前端页面
